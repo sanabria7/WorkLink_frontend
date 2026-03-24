@@ -1,0 +1,67 @@
+:root{
+  font-family: Roboto;
+}
+
+body{
+  padding: 0;
+  margin: 0;
+}
+
+label {
+  display: block;
+}
+
+.form {
+  width: 400px;
+  margin: 0 auto;
+}
+
+input[type="text"],
+[type="password"],
+[type="email"]{
+  display: block;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 5px 0 10px 0;
+}
+
+input[type="button"],
+button{
+  background-color: dodgerblue;
+  padding: 10px;
+  border: 0;
+  min-width: 100px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+nav {
+  background-color: #eee;
+}
+
+nav ul {
+  margin: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  padding: 10px;
+}
+
+a {
+  color: rgb(97, 28, 161);
+  text-decoration: none;
+}
+
+.dashboard {
+  width: 500px;
+  margin: auto;
+}
+
+.errorMessage {
+  background-color: #f2dede;
+  color: #a94442;
+  padding: 10px;
+}
