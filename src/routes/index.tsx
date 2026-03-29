@@ -1,4 +1,4 @@
-import DefaultLayout from "../layout/defaultLayout";
+import DefaultLayout from "../components/layout/defaultLayout";
 
 export default function Index() {
     return (

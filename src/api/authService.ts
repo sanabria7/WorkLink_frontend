@@ -2,11 +2,12 @@ import api from "./axios";
 import type { User } from "../types/types";
 
 export async function login(correo:string, password:string) {
-    const response = await api.post<string>(
+    const response = await api.post<{token: string}>(
         "/login",
         { correo, password }
     );
-    return response.data;
+    const token = response.data.token;
+    return token;
 }
 
 export async function registro(data: {
@@ -22,4 +23,9 @@ export async function registro(data: {
 
 export function logOut(){
     localStorage.removeItem("accessToken");
+}
+
+export async function cambiarRol(rol: string) {
+    const response = await api.post<User>("/user/cambiarRol", {rol});
+    return response.data;
 }
