@@ -1,8 +1,8 @@
-import { Link, replace, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/authProvider";
 import { useState } from "react";
 
-export default function header() {
+export default function Header() {
 
     const { isAuthenticated, user, logout } = useAuth();
     const navigate = useNavigate();
@@ -15,7 +15,11 @@ export default function header() {
     }
 
     function handleBecomeProvider() {
-        console.log("cambio a proveedor")
+        if (isAuthenticated) {
+            alert("cambiaste a "+ user?.rol);
+        } else {
+            navigate("/login");
+        }
     }
 
     function handleLogOut() {
@@ -25,7 +29,7 @@ export default function header() {
 
     return (
         <header className="header">
-            <nav className="navbar" aria-label="Navegación Principal">
+            <nav style={{ display: "flex" }} className="navbar" aria-label="Navegación Principal">
                 {/* Logo */}
                 <div className="navbar-left">
                     <Link to="/" className="logo" aria-label="Ir al inicio">WorkLink</Link>
@@ -43,12 +47,12 @@ export default function header() {
                             <span>Agregar servicio</span>
                         </button>
                         <button type="submit" className="btn-primary" datatype="submit" aria-label="Buscar">
-                            <span>◘</span>
+                            <span>Buscar◘</span>
                         </button>
                     </form>
                 </div>
                 {/* Acciones del usuario */}
-                <div className="navbar-right">
+                <div style={{ display: "flex" }} className="navbar-right">
                     <div datatype="Cambiar rol de usuario" aria-label={"Funcion del cambio de rol"}>
                         <button type="button" onClick={handleBecomeProvider} className="btn-tertiary">
                             <span>Conviértete en Proveedor</span>
@@ -56,12 +60,12 @@ export default function header() {
                     </div>
                     <div datatype="Cambiar idioma" aria-label="Cambiar idioma">
                         <button type="button" onClick={() => alert("Español, Inglés, Messi")} className="btn-tertiary">
-                            <span>◘</span>
+                            <span>Idioma◘</span>
                         </button>
                     </div>
                     <div className="btn-menu">
                         <button type="button" onClick={() => setMenuOpen((prevOpen) => !prevOpen)}>
-                            <span>◘</span>
+                            <span>Menu◘</span>
                         </button>
                     </div>
                     {
@@ -70,14 +74,14 @@ export default function header() {
                                 {
                                     !isAuthenticated ? (
                                         <>
-                                            <li><Link to="" onClick={() => setMenuOpen(false)}></Link>Centro de ayuda</li>
-                                            <li><Link to="/login" onClick={() => setMenuOpen(false)}></Link>Conviértete en proveedor</li>
-                                            <li><Link to="/login" onClick={() => setMenuOpen(false)}></Link>Iniciar Sesión o registrarse</li>
+                                            <li><Link to="" onClick={() => setMenuOpen(false)}>Centro de ayuda</Link></li>
+                                            <li><Link to="/login" onClick={() => setMenuOpen(false)}>Conviértete en proveedor</Link></li>
+                                            <li><Link to="/login" onClick={() => setMenuOpen(false)}>Iniciar Sesión o registrarse</Link></li>
                                         </>
                                     ) : (
                                         <>
                                             <li><Link to="/perfil" onClick={() => setMenuOpen(false)}>
-                                                {user?.nombre ? `${user.nombre} ${user.apellido}}` : ""}
+                                                {user?.nombre ? `${user.nombre} ${user.apellido}` : ""}
                                             </Link>Perfil</li>
                                             <li>
                                                 <button type="button" onClick={() => { setMenuOpen(false); handleLogOut(); }} className="btn-quaternary">Cerrar Sesión</button>

@@ -2,8 +2,6 @@ import DefaultLayout from "../components/layout/defaultLayout";
 
 export default function Index() {
     return (
-        <DefaultLayout>
-            <h1>Soy el index</h1>
-        </DefaultLayout>
+        <h1>Soy el index</h1>
     );
 }

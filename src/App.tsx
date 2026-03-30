@@ -8,45 +8,31 @@ import ProtectedRoute from './routes/protectedRoute.tsx';
 import { AuthProvider } from './auth/authProvider.tsx';
 import Landing from './routes/landing.tsx';
 import DefaultLayout from './components/layout/defaultLayout.tsx';
+import RolRoute from './routes/rolRoute.tsx';
+import ForgotPassword from './routes/forgot-password.tsx';
+import ResetPassword from './routes/reset-password.tsx';
 
 const router = createBrowserRouter([
     {
         element: <DefaultLayout />,
         children: [
-            {
-                path: "/",
-                element: <Landing />,
-            },
-            {
-                path: "/login",
-                element: <Login />,
-            },
-            {
-                path: "/registro",
-                element: <Registro />,
-            },
-            {
-                path: "/busqueda",
-                /* element: <ResultadosBusqueda/> */
-            },
+            { path: "/", element: <Landing /> },
+            { path: "/login", element: <Login /> },
+            { path: "/registro", element: <Registro /> },
+            { path: "/forgot-password", element: <ForgotPassword /> },
+            { path: "/reset-password", element: <ResetPassword /> },
+            { path: "/busqueda", /* element: <ResultadosBusqueda/> */ },
             {
                 element: <ProtectedRoute />,
                 children: [
+                    { path: "/home", element: <Index /> },
+                    { path: "/perfil", /* element: <Perfil /> */ },
                     {
-                        path: "/home",
-                        element: <Index />
-                    },
-                    {
-                        path: "/perfil",
-                        /* element: <Perfil /> */
-                    },
-                    {
-                        path: "/proveedor/dashboard"
-                        /* element: <Dashboard/> */
-                    },
-                    {
-                        path: "/proveedor/crearPerfil"
-                        /* element: <crearPerfilProv/> */
+                        element: <RolRoute requiredRol="proveedor" />,
+                        children: [
+                            { path: "/proveedor/dashboard", /* element: <Dashboard/> */ },
+                            { path: "/proveedor/calendario", /* element: <crearPerfilProv/> */ },
+                        ]
                     },
                 ]
             },

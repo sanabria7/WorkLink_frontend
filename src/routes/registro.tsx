@@ -21,18 +21,18 @@ export default function Registro() {
         setErrorResponse(null);
 
         if (!nombre || !apellido || !correo || !password || !rol) {
-            setErrorResponse("Faltan campos por completar, revise nuevamente");
+            setErrorResponse("Algunos campos están incompletos, revisa nuevamente");
             return;
         }
         setLoading(true)
         try {
             await registro({ nombre, apellido, correo, password, rol })
             navigate("/login", { replace: true })
-        } catch (err: unknown) {
-            if (isAxiosError(err)) {
-                setErrorResponse(mapAuthError(err));
-            } else if (err instanceof Error) {
-                setErrorResponse(err.message);
+        } catch (error: unknown) {
+            if (isAxiosError(error)) {
+                setErrorResponse(mapAuthError(error));
+            } else if (error instanceof Error) {
+                setErrorResponse(error.message);
             } else {
                 setErrorResponse("Error desconocido");
             }
@@ -50,11 +50,13 @@ export default function Registro() {
             <label htmlFor="nombre">Nombre</label>
             <input id="nombre"
                 name="nombre"
+                type="text"
                 value={nombre}
                 onChange={(evento) => setNombre(evento.target.value)} required />
             <label htmlFor="apellido">Apellido</label>
             <input id="apellido"
                 name="apellido"
+                type="text"
                 value={apellido}
                 onChange={(evento) => setApellido(evento.target.value)} required />
             <label htmlFor="correo">Correo</label>
@@ -69,12 +71,12 @@ export default function Registro() {
                 type="password"
                 value={password}
                 onChange={(evento) => setPassword(evento.target.value)} required />
-            <label htmlFor="rol">Rol</label>
+            <label htmlFor="rol">Elige tu rol</label>
             <select id="rol" name="rol" value={rol} onChange={(evento) => setRol(evento.target.value)} required>
                 <option value="cliente">Cliente</option>
                 <option value="proveedor">Proveedor</option>
             </select>
-            <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Verificando datos" : "Regístrate"}</button>
+            <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Verificando datos..." : "Regístrate"}</button>
             <p> ¿Ya tienes cuenta?
                 <Link to="/login">Inicia sesión</Link>
             </p>

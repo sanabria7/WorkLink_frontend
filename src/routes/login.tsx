@@ -20,7 +20,7 @@ export default function Login() {
         evento.preventDefault();
 
         if (!correo || !password) {
-            setErrorResponse("Faltan campos por completar, revise nuevamente");
+            setErrorResponse("Algunos campos están incompletos, revisa nuevamente");
             return;
         }
         setLoading(true)
@@ -58,7 +58,10 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(evento) => setPassword(evento.target.value)} required/>
-            <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Autenticando" : "Ingresar"}</button>
+            <p> ¿Olvidaste la contraseña?
+                <Link to="/forgot-password"> Haz clic aquí para restaurarla</Link>
+            </p>
+            <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Autenticando..." : "Ingresar"}</button>
             <p> ¿No tienes cuenta?
                 <Link to="/registro"> Regístrate </Link>
             </p>
