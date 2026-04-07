@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SbLocationModal from "../modals/sb-LocationModal";
 import SbDateTimeModal from "../modals/sb-DateTimeModal";
+import Icon from "../misc/icon";
 
 export default function SearchBar() {
 
@@ -30,7 +31,7 @@ export default function SearchBar() {
                 <span>{service || "Agregar servicio"}</span>
             </button>
             <button type="submit" className="btn-primary" datatype="submit" aria-label="Buscar">
-                <span>Buscar◘</span>
+                <span><Icon name="search"></Icon></span>
             </button>
             {/* Modales */}
             {openModal === "location" && (

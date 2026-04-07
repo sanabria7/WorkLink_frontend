@@ -34,7 +34,7 @@ export default function ProveedorPublicView() {
     if (!proveedor) return <p>No se encontró el proveedor</p>;
 
     return (
-        <div>
+        <div className="perfil-prov">
             <h1>Perfil público del proveedor</h1>
             <p><strong>Nombre:</strong> {proveedor.usuario.nombre}</p>
             <p><strong>Apellido:</strong> {proveedor.usuario.apellido}</p>

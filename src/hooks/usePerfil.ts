@@ -47,7 +47,6 @@ export function useProfile(user: AuthUser | null) {
         apellido: user.apellido,
         telefono: user.telefono,
       }; */
-      console.log("hola")
       console.log("AuthUser recibido en useProfile:", user);
       try {
         if (user.rol.toLocaleLowerCase() === "cliente") {

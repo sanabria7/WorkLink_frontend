@@ -3,6 +3,7 @@ import { useAuth } from "../../auth/authProvider";
 import { useState } from "react";
 import SearchBar from "./searchBar";
 import Panel from "./panel";
+import Icon from "../misc/icon";
 
 export default function Header() {
 
@@ -41,7 +42,7 @@ export default function Header() {
 
     return (
         <header className="header">
-            <nav style={{ display: "flex" }} className="navbar" aria-label="Navegación Principal">
+            <nav className="navbar" aria-label="Navegación Principal">
                 {/* Logo */}
                 <div className="navbar-left">
                     <Link to={logoRoute} className="logo" aria-label="Ir al inicio">WorkLink</Link>
@@ -56,19 +57,28 @@ export default function Header() {
                 </div>
                 {/* Acciones del usuario */}
                 <div style={{ display: "flex" }} className="navbar-right">
-                    <div datatype="Cambiar rol de usuario" aria-label={"Funcion del cambio de rol"}>
-                        <button type="button" onClick={handleBecomeProvider} className="btn-tertiary">
-                            <span>Cambiar de rol</span>
-                        </button>
-                    </div>
-                    <div datatype="Cambiar idioma" aria-label="Cambiar idioma">
-                        <button type="button" onClick={() => alert("Español, Inglés, Messi")} className="btn-quaternary">
-                            <span>Idioma◘</span>
+                    {isAuthenticated ? (
+                        <div datatype="Cambiar rol de usuario" aria-label={"Funcion del cambio de rol"}>
+                            <button type="button" onClick={handleBecomeProvider} className="btn-tertiary">
+                                <span>Cambiar rol</span>
+                            </button>
+                        </div>
+                    ) : (
+                        <div datatype="Iniciar sesión" aria-label={"Iniciar sesión"}>
+                            <button type="button" onClick={() => navigate("/login")} className="btn-tertiary">
+                                <span>Iniciar sesión</span>
+                            </button>
+                        </div>
+                    )}
+
+                    <div datatype="Cambiar idioma" aria-label="Cambiar idioma" className="btn-quaternary">
+                        <button type="button" onClick={() => alert("Español, Inglés, Messi")}>
+                            <span><Icon name="language"></Icon></span>
                         </button>
                     </div>
                     <div className="btn-quaternary">
                         <button type="button" onClick={() => setMenuOpen((prevOpen) => !prevOpen)}>
-                            <span>Menu◘</span>
+                            <span><Icon name="menu"></Icon></span>
                         </button>
                     </div>
                     {
@@ -79,13 +89,12 @@ export default function Header() {
                                         <>
                                             <li><Link to="" onClick={() => setMenuOpen(false)}>Centro de ayuda</Link></li>
                                             <li><Link to="/login" onClick={() => setMenuOpen(false)}>Conviértete en proveedor</Link></li>
-                                            <li><Link to="/login" onClick={() => setMenuOpen(false)}>Iniciar Sesión o registrarse</Link></li>
                                         </>
                                     ) : (
                                         <>
-                                            <li>
+                                            {/* <li>
                                                 {user?.nombre ? `${user.nombre} ${user.apellido}` : ""}
-                                            </li>
+                                            </li> */}
                                             <li>
                                                 <Link to="/perfil" onClick={() => setMenuOpen(false)}>
                                                     Perfil

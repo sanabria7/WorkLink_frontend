@@ -87,7 +87,7 @@ export default function Registro() {
             </select>
             <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Verificando datos..." : "Regístrate"}</button>
             <p> ¿Ya tienes cuenta?
-                <Link to="/login">Inicia sesión</Link>
+                <Link to="/login"> Inicia sesión</Link>
             </p>
         </form>
     )

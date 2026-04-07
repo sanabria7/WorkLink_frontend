@@ -61,7 +61,7 @@ export default function Login() {
                 value={password}
                 onChange={(evento) => setPassword(evento.target.value)} required />
             <p> ¿Olvidaste la contraseña?
-                <Link to="/forgot-password"> Haz clic aquí para restaurarla</Link>
+                <Link to="/forgot-password"> Recuperar contraseña</Link>
             </p>
             <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Autenticando..." : "Ingresar"}</button>
             <p> ¿No tienes cuenta?
