@@ -1,5 +1,5 @@
-import api from "./axios";
-import type { User } from "../types/types";
+import api from "./axiosAuth";
+import type { AuthUser } from "../types/types";
 
 export async function login(correo: string, password: string) {
     const response = await api.post<{ token: string }>(
@@ -7,6 +7,7 @@ export async function login(correo: string, password: string) {
         { correo, password }
     );
     const token = response.data.token;
+    localStorage.setItem("accessToken", token);
     return token;
 }
 
@@ -15,9 +16,10 @@ export async function registro(data: {
     apellido: string;
     correo: string;
     password: string;
-    rol: string;
+    telefono: string;
+    rol: string;    
 }) {
-    const response = await api.post<User>("/user/registrar", data);
+    const response = await api.post<AuthUser>("/user/registrar", data);
     return response.data;
 }
 
@@ -25,8 +27,8 @@ export function logOut() {
     localStorage.removeItem("accessToken");
 }
 
-export async function cambiarRol(rol: string) {
-    const response = await api.post<User>("/user/cambiarRol", { rol });
+export async function getUser() {
+    const response = await api.get<AuthUser>("/user/get");
     return response.data;
 }
 
@@ -36,6 +38,6 @@ export async function forgotPassword(correo: string) {
 }
 
 export async function resetPassword(playload: { token: string, password: string }) {
-    const response = await api.post<string>("user/reset-password", playload);
+    const response = await api.post<string>("user/new-password", playload);
     return response.data;
 }

@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/authProvider";
 
 interface rolRouteProps {
-    requiredRol: "cliente" | "proveedor" | string;
+    requiredRol: string;
 }
 
 export default function RolRoute({ requiredRol }: rolRouteProps) {
@@ -10,8 +10,6 @@ export default function RolRoute({ requiredRol }: rolRouteProps) {
     const location = useLocation();
 
     if (!isAuthenticated) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
-
-    if (!user) return null;
 
     if (user?.rol !== requiredRol) return <Navigate to="/" replace />;
 

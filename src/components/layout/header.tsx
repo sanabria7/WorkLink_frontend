@@ -1,25 +1,37 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/authProvider";
 import { useState } from "react";
+import SearchBar from "./searchBar";
+import Panel from "./panel";
 
 export default function Header() {
 
-    const { isAuthenticated, user, logout } = useAuth();
+    const { isAuthenticated, user, logout, cambiarRol } = useAuth();
+    console.log("¿Está autenticado?:", isAuthenticated);
+    console.log("Usuario actual:", user);
     const navigate = useNavigate();
 
     const [menuOpen, setMenuOpen] = useState(false);
     /* const menuRef = useRef<HTMLDivElement | null>(null); */
-
-    function handleSearch(evento: React.SubmitEvent<HTMLFormElement>): void {
-        evento.preventDefault();
-    }
+    const logoRoute = !isAuthenticated
+        ? "/"
+        : user?.rol === "cliente"
+            ? "/home"
+            : "/dashboard";
 
     function handleBecomeProvider() {
+        /* console.log("Rol actual antes de cambiar:", user?.rol);
         if (isAuthenticated) {
-            alert("cambiaste a "+ user?.rol);
+            if (user?.rol === "cliente") {
+                cambiarRol("proveedor");
+                navigate("/dashboard", { replace: true });
+            } else {
+                cambiarRol("cliente");
+                navigate("/home", { replace: true });
+            }
         } else {
             navigate("/login");
-        }
+        } */
     }
 
     function handleLogOut() {
@@ -32,38 +44,29 @@ export default function Header() {
             <nav style={{ display: "flex" }} className="navbar" aria-label="Navegación Principal">
                 {/* Logo */}
                 <div className="navbar-left">
-                    <Link to="/" className="logo" aria-label="Ir al inicio">WorkLink</Link>
+                    <Link to={logoRoute} className="logo" aria-label="Ir al inicio">WorkLink</Link>
                 </div>
                 {/* Barra de búsqueda */}
                 <div className="navbar-center">
-                    <form onSubmit={handleSearch} role="search" aria-label="Formulario de búsqueda">
-                        <button type="button" className="btn-searchbar" datatype="location" aria-label="Agregar ubicación">
-                            <span>Agregar ubicación</span>
-                        </button>
-                        <button type="button" className="btn-searchbar" datatype="date-time" aria-label="Agregar fecha">
-                            <span>Agregar fecha</span>
-                        </button>
-                        <button type="button" className="btn-searchbar" datatype="add-service" aria-label="Agregar servicio">
-                            <span>Agregar servicio</span>
-                        </button>
-                        <button type="submit" className="btn-primary" datatype="submit" aria-label="Buscar">
-                            <span>Buscar◘</span>
-                        </button>
-                    </form>
+                    {isAuthenticated && user?.rol === "proveedor" ? (
+                        <Panel />
+                    ) : (
+                        <SearchBar />
+                    )}
                 </div>
                 {/* Acciones del usuario */}
                 <div style={{ display: "flex" }} className="navbar-right">
                     <div datatype="Cambiar rol de usuario" aria-label={"Funcion del cambio de rol"}>
                         <button type="button" onClick={handleBecomeProvider} className="btn-tertiary">
-                            <span>Conviértete en Proveedor</span>
+                            <span>Cambiar de rol</span>
                         </button>
                     </div>
                     <div datatype="Cambiar idioma" aria-label="Cambiar idioma">
-                        <button type="button" onClick={() => alert("Español, Inglés, Messi")} className="btn-tertiary">
+                        <button type="button" onClick={() => alert("Español, Inglés, Messi")} className="btn-quaternary">
                             <span>Idioma◘</span>
                         </button>
                     </div>
-                    <div className="btn-menu">
+                    <div className="btn-quaternary">
                         <button type="button" onClick={() => setMenuOpen((prevOpen) => !prevOpen)}>
                             <span>Menu◘</span>
                         </button>
@@ -80,9 +83,14 @@ export default function Header() {
                                         </>
                                     ) : (
                                         <>
-                                            <li><Link to="/perfil" onClick={() => setMenuOpen(false)}>
+                                            <li>
                                                 {user?.nombre ? `${user.nombre} ${user.apellido}` : ""}
-                                            </Link>Perfil</li>
+                                            </li>
+                                            <li>
+                                                <Link to="/perfil" onClick={() => setMenuOpen(false)}>
+                                                    Perfil
+                                                </Link>
+                                            </li>
                                             <li>
                                                 <button type="button" onClick={() => { setMenuOpen(false); handleLogOut(); }} className="btn-quaternary">Cerrar Sesión</button>
                                             </li>

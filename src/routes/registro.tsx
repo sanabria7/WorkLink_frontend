@@ -12,7 +12,8 @@ export default function Registro() {
     const [apellido, setApellido] = useState("");
     const [password, setPassword] = useState("");
     const [correo, setCorreo] = useState("");
-    const [rol, setRol] = useState("");
+    const [telefono, setTelefono] = useState("");
+    const [rol, setRol] = useState("cliente");
     const [errorResponse, setErrorResponse] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
 
@@ -20,13 +21,13 @@ export default function Registro() {
         evento.preventDefault();
         setErrorResponse(null);
 
-        if (!nombre || !apellido || !correo || !password || !rol) {
+        if (!nombre || !apellido || !correo || !password || !telefono || !rol) {
             setErrorResponse("Algunos campos están incompletos, revisa nuevamente");
             return;
         }
         setLoading(true)
         try {
-            await registro({ nombre, apellido, correo, password, rol })
+            await registro({ nombre, apellido, correo, password, telefono, rol })
             navigate("/login", { replace: true })
         } catch (error: unknown) {
             if (isAxiosError(error)) {
@@ -71,8 +72,16 @@ export default function Registro() {
                 type="password"
                 value={password}
                 onChange={(evento) => setPassword(evento.target.value)} required />
+            <label htmlFor="telefono">Teléfono</label>
+            <input id="telefono"
+                name="telefono"
+                type="tel"
+                value={telefono}
+                inputMode="tel"
+                onChange={(evento) => setTelefono(evento.target.value)} required />
             <label htmlFor="rol">Elige tu rol</label>
             <select id="rol" name="rol" value={rol} onChange={(evento) => setRol(evento.target.value)} required>
+                <option value="">-- Selecciona un rol --</option>
                 <option value="cliente">Cliente</option>
                 <option value="proveedor">Proveedor</option>
             </select>

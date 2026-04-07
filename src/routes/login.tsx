@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/authProvider";
 import { isAxiosError } from "axios";
 import { mapAuthError } from "../utils/mapAuthError";
 
 export default function Login() {
-    const { login, isAuthenticated } = useAuth();
+    const { login } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -25,8 +25,12 @@ export default function Login() {
         }
         setLoading(true)
         try {
-            await login(correo, password);
-            navigate(from ?? "/index", { replace: true });
+            const loggedUser = await login(correo, password);
+            if (loggedUser?.rol === "cliente") {
+                navigate("/home", { replace: true });
+            } else if (loggedUser?.rol === "proveedor") {
+                navigate("/dashboard", { replace: true });
+            }
         } catch (err: unknown) {
             if (isAxiosError(err)) {
                 setErrorResponse(mapAuthError(err));
@@ -40,8 +44,6 @@ export default function Login() {
         }
     }
 
-    if (isAuthenticated) return <Navigate to="/index" replace />
-    
     return (
         <form className="form" onSubmit={handleSubmit} aria-describedby="login-error">
             <h1>Login</h1>
@@ -51,13 +53,13 @@ export default function Login() {
                 name="email"
                 type="email"
                 value={correo}
-                onChange={(evento) => setCorreo(evento.target.value)} required/>
+                onChange={(evento) => setCorreo(evento.target.value)} required />
             <label htmlFor="password">Contraseña</label>
             <input id="password"
                 name="password"
                 type="password"
                 value={password}
-                onChange={(evento) => setPassword(evento.target.value)} required/>
+                onChange={(evento) => setPassword(evento.target.value)} required />
             <p> ¿Olvidaste la contraseña?
                 <Link to="/forgot-password"> Haz clic aquí para restaurarla</Link>
             </p>
