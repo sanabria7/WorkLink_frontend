@@ -26,7 +26,7 @@ export interface ProfilesUser {
 
 export interface ClienteDTO {
     id?: string;
-    rating_promedio: number;
+    ratingPromedio: number;
     ocupacion: string;
     verificado: boolean;
 }
@@ -35,8 +35,8 @@ export interface ProveedorDTO {
     id?: string;
     biografia: string;
     verificado: boolean;
-    horario_disponibilidad: string;
-    rating_promedio: number;
+    horarioDisponibilidad: string;
+    ratingPromedio: number;
 }
 
 export interface ProfileCliente extends ClienteDTO {

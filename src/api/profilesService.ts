@@ -23,7 +23,7 @@ export async function getPerfilCliente(correo: string/* , usuario: ProfilesUser 
     return {
         usuario: data.usuario,
         ocupacion: data.ocupacion ?? "",
-        rating_promedio: data.rating_promedio ?? 0,
+        ratingPromedio: data.ratingPromedio ?? 0,
         verificado: data.verificado ?? false,
     };
 }
@@ -45,12 +45,13 @@ export async function createPerfilProveedor(perfil: ProfileProveedor): Promise<P
 
 export async function getPerfilProveedor(correo: string/* , usuario: ProfilesUser */): Promise<ProfileProveedor> {
     const { data } = await api.get<ProfileProveedor>(`${"/api/perfil-servidor"}/${correo}`);
+    console.log("esta es la data mi rey: ", data);
     return {
         usuario: data.usuario,
         biografia: data.biografia ?? "",
         verificado: data.verificado ?? false,
-        horario_disponibilidad: data.horario_disponibilidad ?? "",
-        rating_promedio: data.rating_promedio ?? 0,
+        horarioDisponibilidad: data.horarioDisponibilidad ?? "",
+        ratingPromedio: data.ratingPromedio ?? 0,
     };
 }
 

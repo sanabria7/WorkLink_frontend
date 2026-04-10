@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/authProvider";
 import { isAxiosError } from "axios";
-import { mapAuthError } from "../utils/mapAuthError";
+import { mapGlobalErrors } from "../utils/mapGlobalErrors";
+import Icon from "../components/misc/icon";
 
 export default function Login() {
     const { login } = useAuth();
-    const location = useLocation();
     const navigate = useNavigate();
 
     const [correo, setCorreo] = useState("");
@@ -14,26 +14,19 @@ export default function Login() {
     const [errorResponse, setErrorResponse] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const from = (location.state as any)?.from as string | undefined;
-
     async function handleSubmit(evento: React.SubmitEvent<HTMLFormElement>) {
         evento.preventDefault();
-
-        if (!correo || !password) {
-            setErrorResponse("Algunos campos están incompletos, revisa nuevamente");
-            return;
-        }
         setLoading(true)
         try {
             const loggedUser = await login(correo, password);
             if (loggedUser?.rol === "cliente") {
-                navigate("/home", { replace: true });
+                navigate("/", { replace: true });
             } else if (loggedUser?.rol === "proveedor") {
                 navigate("/dashboard", { replace: true });
             }
         } catch (err: unknown) {
             if (isAxiosError(err)) {
-                setErrorResponse(mapAuthError(err));
+                setErrorResponse(mapGlobalErrors(err));
             } else if (err instanceof Error) {
                 setErrorResponse(err.message);
             } else {
@@ -47,7 +40,11 @@ export default function Login() {
     return (
         <form className="form" onSubmit={handleSubmit} aria-describedby="login-error">
             <h1>Login</h1>
-            {errorResponse && <div id="login-error" role="alert" className="errorMessage">{errorResponse}</div>}
+            {errorResponse && 
+            <div id="login-error" role="alert" className="errorMessage">
+                <Icon name="error"/>
+                {errorResponse}
+            </div>}
             <label htmlFor="email">Correo</label>
             <input id="email"
                 name="email"
@@ -61,11 +58,11 @@ export default function Login() {
                 value={password}
                 onChange={(evento) => setPassword(evento.target.value)} required />
             <p> ¿Olvidaste la contraseña?
-                <Link to="/forgot-password"> Recuperar contraseña</Link>
+                <Link to="/forgot-password">Recuperar contraseña</Link>
             </p>
             <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Autenticando..." : "Ingresar"}</button>
             <p> ¿No tienes cuenta?
-                <Link to="/registro"> Regístrate </Link>
+                <Link to="/registro">Regístrate </Link>
             </p>
         </form>
     );

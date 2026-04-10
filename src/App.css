@@ -20,7 +20,8 @@ label {
 }
 
 .nav-panel {
-  background-color: inherit; /* mantiene el color actual */
+  background-color: inherit;
+  /* mantiene el color actual */
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   margin-bottom: 2rem;
@@ -30,7 +31,8 @@ label {
   list-style: none;
   display: flex;
   justify-content: center;
-  gap: 1.5rem; /* separa los botones */
+  gap: 1.5rem;
+  /* separa los botones */
   margin: 0;
   padding: 0;
 }
@@ -42,14 +44,17 @@ label {
 .nav-links a {
   text-decoration: none;
   font-weight: 600;
-  color: inherit; /* mantiene el color actual */
-  padding: 0.5rem 1rem; /* da espacio interno a cada enlace */
+  color: inherit;
+  /* mantiene el color actual */
+  padding: 0.5rem 1rem;
+  /* da espacio interno a cada enlace */
   border-radius: 6px;
   transition: background-color 0.3s ease;
 }
 
 .nav-links a:hover {
-  background-color: rgba(0,0,0,0.1); /* efecto hover suave */
+  background-color: rgba(0, 0, 0, 0.1);
+  /* efecto hover suave */
 }
 
 input[type="text"],
@@ -263,12 +268,18 @@ input[type="text"],
   }
 
   .errorMessage {
-    background: #ffe5e5;
-    color: #b00020;
-    padding: 0.75rem;
-    border-radius: 6px;
+    color: rgb(247, 69, 69);
     font-size: 0.9rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.2rem;
+    font-weight: medium;
+  }
+
+  .errorMessage svg {
+    width: 1em;
+    height: 1em;
   }
 
   label {
@@ -341,7 +352,7 @@ input[type="text"],
   padding: 2rem;
   background-color: #f9f9f9;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
 }
 
@@ -483,11 +494,4 @@ input[type="text"],
   font-weight: 500;
   background-color: #fbeaea;
   color: #c62828;
-}
-
-
-.errorMessage {
-  background-color: #f2dede;
-  color: #a94442;
-  padding: 10px;
 }

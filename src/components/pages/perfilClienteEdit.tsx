@@ -1,12 +1,16 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "../../auth/authProvider";
 import { useProfile } from "../../hooks/usePerfil";
 import type { ProfileCliente } from "../../types/types";
 import PerfilUsuario from "./perfilGeneralUsuario";
+import { isAxiosError } from "axios";
+import { mapValidationErrors } from "../../utils/mapValidationErrors";
+import { mapGlobalErrors } from "../../utils/mapGlobalErrors";
 
 export default function EditPerfilCliente() {
   const { user } = useAuth();
   const { cliente, rolActivo, setCliente, saveCliente, loading, saving, error } = useProfile(user);
+  const [errorResponse, setErrorResponse] = useState<Record<string, string>>({});
 
   if (loading) return <p>Cargando perfil...</p>;
   if (rolActivo !== "cliente" || !cliente) return <p>No se encontró el perfil del cliente</p>;
@@ -49,9 +53,19 @@ export default function EditPerfilCliente() {
     try {
       await saveCliente(cliente);
       alert("Perfil guardado correctamente.");
-    } catch (error) {
-      console.error("Error guardando perfil cliente:", error);
-    }
+    } catch (error: unknown) {
+          if (isAxiosError(error)) {
+            if (error.response?.status === 400 && typeof error.response.data === "object") {
+              setErrorResponse(mapValidationErrors(error.response.data));
+            } else {
+              setErrorResponse({ general: mapGlobalErrors(error) });
+            }
+          } else if (error instanceof Error) {
+            setErrorResponse({ general: error.message });
+          } else {
+            setErrorResponse({ general: "Error desconocido" });
+          }
+        }
   }
 
   return (
@@ -66,6 +80,7 @@ export default function EditPerfilCliente() {
         usuario={cliente.usuario}
         onChange={handleUsuarioChange}
         disabled={saving}
+        errorResponse={errorResponse}
       />
       <fieldset className="fieldset" aria-label="Perfil cliente">
         <label htmlFor="cliente-ocupacion">Ocupación:</label>
@@ -74,14 +89,6 @@ export default function EditPerfilCliente() {
           type="text"
           value={cliente.ocupacion}
           onChange={(evento) => handleFieldChange("ocupacion", evento.target.value)}
-          disabled={saving}
-        />
-        <label htmlFor="cliente-verificado">Verificado:</label>
-        <input
-          id="cliente-verificado"
-          type="checkbox"
-          checked={cliente.verificado}
-          onChange={(evento) => handleFieldChange("verificado", evento.target.checked)}
           disabled={saving}
         />
       </fieldset>

@@ -47,9 +47,9 @@ export default function ProveedorPublicView() {
                 />
             )}
             <p><strong>Biografía:</strong> {proveedor.biografia}</p>
-            <p><strong>Horario de disponibilidad:</strong> {proveedor.horario_disponibilidad}</p>
+            <p><strong>Horario de disponibilidad:</strong> {proveedor.horarioDisponibilidad}</p>
             <p><strong>Verificado:</strong> {proveedor.verificado ? "Sí" : "No"}</p>
-            <p><strong>Rating promedio:</strong> {proveedor.rating_promedio}</p>
+            <p><strong>Rating promedio:</strong> {proveedor.ratingPromedio}</p>
         </div>
     );
 }

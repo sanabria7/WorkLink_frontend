@@ -1,12 +1,17 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "../../auth/authProvider";
 import { useProfile } from "../../hooks/usePerfil";
 import type { ProfileProveedor } from "../../types/types";
 import PerfilUsuario from "./perfilGeneralUsuario";
+import { isAxiosError } from "axios";
+import { mapValidationErrors } from "../../utils/mapValidationErrors";
+import { mapGlobalErrors } from "../../utils/mapGlobalErrors";
+import Icon from "../misc/icon";
 
 export default function EditPerfilProveedor() {
-const { user } = useAuth();
+  const { user } = useAuth();
   const { proveedor, rolActivo, setProveedor, saveProveedor, loading, saving, error } = useProfile(user);
+  const [errorResponse, setErrorResponse] = useState<Record<string, string>>({})
 
   if (loading) return <p>Cargando perfil...</p>;
   if (rolActivo !== "proveedor" || !proveedor) return <p>No se encontró el perfil del proveedor</p>;
@@ -49,23 +54,35 @@ const { user } = useAuth();
     try {
       await saveProveedor(proveedor);
       alert("Perfil guardado correctamente.");
-    } catch (error) {
-      console.error("Error guardando perfil proveedor:", error);
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        if (error.response?.status === 400 && typeof error.response.data === "object") {
+          setErrorResponse(mapValidationErrors(error.response.data));
+        } else {
+          setErrorResponse({ general: mapGlobalErrors(error) });
+        }
+      } else if (error instanceof Error) {
+        setErrorResponse({ general: error.message });
+      } else {
+        setErrorResponse({ general: "Error desconocido" });
+      }
     }
   }
 
   return (
     <form className="edit-form" onSubmit={handleSubmit} aria-label="Editar perfil" aria-describedby="editPerfil-error">
       <h1>Editar perfil {user?.rol}</h1>
-      {error && (
+      {errorResponse.general && (
         <div id="editPerfil-error" role="alert" className="errorMessage">
-          Error cargando perfil: {String(error)}
+          <Icon name="error"/>
+          {errorResponse.general}
         </div>
       )}
       <PerfilUsuario
         usuario={proveedor.usuario}
         onChange={handleUsuarioChange}
         disabled={saving}
+        errorResponse={errorResponse}
       />
       <fieldset className="fieldset" aria-label="Perfil proveedor">
         <label htmlFor="proveedor-biografia">Biografia:</label>
@@ -75,20 +92,12 @@ const { user } = useAuth();
           onChange={(evento) => handleFieldChange("biografia", evento.target.value)}
           disabled={saving}
         />
-        <label htmlFor="proveedor-verificado">Verificado:</label>
-        <input
-          id="proveedor-verificado"
-          type="checkbox"
-          checked={proveedor.verificado}
-          onChange={(evento) => handleFieldChange("verificado", evento.target.checked)}
-          disabled={saving}
-        />
         <label htmlFor="proveedor-horarioDisponibilidad">Horario de Disponibilidad:</label>
         <input
           id="proveedor-horarioDisponibilidad"
           type="text"
-          value={proveedor.horario_disponibilidad ?? ""}
-          onChange={(evento) => handleFieldChange("horario_disponibilidad", evento.target.value)}
+          value={proveedor.horarioDisponibilidad ?? ""}
+          onChange={(evento) => handleFieldChange("horarioDisponibilidad", evento.target.value)}
           disabled={saving}
         />
       </fieldset>

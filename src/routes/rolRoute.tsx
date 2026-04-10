@@ -9,7 +9,7 @@ export default function RolRoute({ requiredRol }: rolRouteProps) {
     const { isAuthenticated, user } = useAuth();
     const location = useLocation();
 
-    if (!isAuthenticated) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+    if (!isAuthenticated) return <Navigate to="/" replace state={{ from: location.pathname + location.search }} />;
 
     if (user?.rol !== requiredRol) return <Navigate to="/" replace />;
 

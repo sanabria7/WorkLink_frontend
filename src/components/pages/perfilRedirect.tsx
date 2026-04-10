@@ -3,7 +3,7 @@ import { useProfile } from "../../hooks/usePerfil";
 import EditPerfilCliente from "./perfilClienteEdit";
 import EditPerfilProveedor from "./perfilProveedorEdit";
 
-export default function EditPerfilGeneral() {
+export default function PerfilRedirect() {
   const { user } = useAuth();
   const { rolActivo } = useProfile(user);
 

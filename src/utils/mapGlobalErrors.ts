@@ -1,6 +1,6 @@
 import type { AxiosError } from "axios";
 
-export function mapAuthError(err: AxiosError<any> | any): string {
+export function mapGlobalErrors(err: AxiosError<any> | any): string {
   if (!err) return "Error desconocido";
   if (!err.response) return "No responde el servidor";
 
@@ -8,19 +8,17 @@ export function mapAuthError(err: AxiosError<any> | any): string {
   const data = err.response.data;
 
   switch (status) {
-    case 400:
-      return data?.message || "Datos inválidos";
     case 401:
-      return data?.message || "Credenciales inválidas";
+      return data?.message || "Correo o contraseña incorrectos";
     case 403:
       return data?.message || "Acceso denegado";
     case 404:
-      return data?.message || "No encontrado";
+      return data?.message || "Recurso no encontrado";
     case 409:
-      return data?.message || "Recurso en conflicto";
+      return data?.message || "Ya existe un recurso con estos datos";
     case 500:
       return "Error interno del servidor";
     default:
-      return data?.message || data?.body?.error || "Error en la petición";
+      return data?.message || "Error en la petición";
   }
 }

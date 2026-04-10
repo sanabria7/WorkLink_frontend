@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { forgotPassword } from "../api/authService";
 import { isAxiosError } from "axios";
-import { mapAuthError } from "../utils/mapAuthError";
+import { mapGlobalErrors } from "../utils/mapGlobalErrors";
+import Icon from "../components/misc/icon";
 
 export default function ForgotPassword() {
     const [correo, setCorreo] = useState("");
@@ -14,19 +15,13 @@ export default function ForgotPassword() {
         evento.preventDefault();
         setErrorResponse(null);
         setMensaje(null);
-
-        if (!correo) {
-            setErrorResponse("El campo del correo es obligatorio");
-            return;
-        }
         setLoading(true);
         try {
-            console.log("hola aqui")
             const response = await forgotPassword(correo);
             setMensaje(response);
         } catch (error: unknown) {
             if (isAxiosError(error)) {
-                setErrorResponse(mapAuthError(error));
+                setErrorResponse(mapGlobalErrors(error));
             } else if (error instanceof Error) {
                 setErrorResponse(error.message);
             } else {
@@ -41,9 +36,18 @@ export default function ForgotPassword() {
         <form className="form" onSubmit={handleSubmit} aria-describedby="forgot-error">
             <h1>Recuperar Contraseña</h1>
             {mensaje && <div role="status" className="infoMessage">{mensaje}</div>}
-            {errorResponse && <div id="forgot-error" role="alert" className="errorMessage">{errorResponse}</div>}
+            {errorResponse &&
+                <div id="forgot-error" role="alert" className="errorMessage">
+                    <Icon name="error" />
+                    {errorResponse}
+                </div>}
             <label htmlFor="correo">Correo</label>
-            <input id="correo" name="correo" type="email" value={correo} onChange={(evento) => setCorreo(evento.target.value)} required />
+            <input id="correo"
+                name="correo"
+                type="email"
+                value={correo}
+                onChange={(evento) => setCorreo(evento.target.value)}
+                required />
             <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Enviando mail..." : "Enviar enlace de recuperación"}</button>
             <button type="button" className="btn-tertiary">
                 <Link to="/login">Cancelar</Link>

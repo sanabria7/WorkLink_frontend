@@ -9,5 +9,5 @@ export default function ProtectedRoute(){
 
     return auth.isAuthenticated
      ? <Outlet/>
-     : <Navigate to="/login" replace state={{from: location.pathname + location.search}}/>;
+     : <Navigate to="/" replace state={{from: location.pathname + location.search}}/>;
 }
