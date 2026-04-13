@@ -1,0 +1,27 @@
+import api from "./axiosOffer";
+import type { Service } from "../types/serviceTypes";
+
+export async function crearServicio(servicio: Service): Promise<Service> {
+  const { data } = await api.post<Service>("/servicio/crear", servicio);
+  return data;
+}
+
+export async function buscarServicio(servicio: Service): Promise<Service> {
+  const { data } = await api.post<Service>("/servicio/busqueda", servicio);
+  return data;
+}
+
+export async function updateServicio(id: string, servicio: Service): Promise<Service> {
+  const { data } = await api.put<Service>(`${"/servicio/actualizar"}/${id}`, servicio);
+  return data;
+}
+
+export async function getServicioById(id: string): Promise<Service> {
+  const { data } = await api.get<Service>(`${"/servicio/get"}/${id}`);
+  return data;
+}
+
+export async function getAllServices(): Promise<Service[]> {
+  const { data } = await api.get<Service[]>("/servicio/listar");
+  return data;
+}

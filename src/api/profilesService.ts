@@ -48,6 +48,7 @@ export async function getPerfilProveedor(correo: string/* , usuario: ProfilesUse
     console.log("esta es la data mi rey: ", data);
     return {
         usuario: data.usuario,
+        id: data.id,
         biografia: data.biografia ?? "",
         verificado: data.verificado ?? false,
         horarioDisponibilidad: data.horarioDisponibilidad ?? "",

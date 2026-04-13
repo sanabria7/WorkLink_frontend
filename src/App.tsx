@@ -15,11 +15,14 @@ import Dashboard from './routes/proveedor/dashboard.tsx';
 import Landing from './routes/landing.tsx';
 import PublicRoute from './routes/publicRoute.tsx';
 import Home from './routes/cliente/home.tsx';
+import CrearServicio from './components/pages/crearServicio.tsx';
+import MisServicios from './routes/proveedor/listaServicios.tsx';
+import EditarServicio from './components/pages/editarServicio.tsx';
 
 const router = createBrowserRouter([
     {
         element: <DefaultLayout />,
-        children: [            
+        children: [
             { path: "/busqueda", /* element: <ResultadosBusqueda/> */ },
             { path: "/:correo", element: <ProveedorPublicView /> },
             {
@@ -46,6 +49,10 @@ const router = createBrowserRouter([
                         element: <RolRoute requiredRol="proveedor" />,
                         children: [
                             { path: "/dashboard", element: <Dashboard /> },
+                            { path: "/calendario", element: <></> },
+                            { path: "/crear-servicio", element: <CrearServicio /> },
+                            { path: "/editar-servicio/:id", element: <EditarServicio /> },
+                            { path: "/mis-servicios", element: <MisServicios/> }
                         ]
                     },
                 ]
