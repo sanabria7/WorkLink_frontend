@@ -1,18 +1,19 @@
 import Icon from "../misc/icon";
 
-interface SbDateTimeModalProps {
+interface SbKeyModalProps {
     value: string;
     onChange: (newValue: string) => void;
     onClose: () => void;
 }
 
-export default function SbDateTimeModal({ value, onChange, onClose }: SbDateTimeModalProps) {
+export default function SbKeyModal({ value, onChange, onClose }: SbKeyModalProps) {
     return (
         <>
-            <strong>Selecciona una fecha</strong>
+            <strong>Búsqueda por palabra clave</strong>
             <input
-                type="date"
-                placeholder="Elige una fecha"
+                style={{width:"20%"}}
+                type="search"
+                placeholder="Encuentra por palabra clave"
                 value={value}
                 onChange={(evento) => onChange(evento.target.value)}
             />
@@ -20,4 +21,4 @@ export default function SbDateTimeModal({ value, onChange, onClose }: SbDateTime
                 onClick={onClose}><Icon name="close"></Icon></button>
         </>
     );
-}
+} 

@@ -1,6 +1,6 @@
 import EditPerfilProveedor from "../components/pages/perfilProveedorEdit";
 import { useProfile } from "../hooks/usePerfil";
-import type { AuthUser } from "../types/types";
+import type { AuthUser } from "../types/userTypes";
 
 export default function EditPerfilProveedorTest() {
   const fakeUser: AuthUser = {

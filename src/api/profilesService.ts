@@ -1,5 +1,5 @@
 import api from "./axiosProfiles";
-import type { ProfileCliente, ProfileProveedor, ProfilesUser } from "../types/types";
+import type { ProfileCliente, ProfileProveedor, ProfilesUser } from "../types/userTypes";
 
 /* Crear usuario */
 export async function createUser(usuario: ProfilesUser): Promise<ProfilesUser> {
@@ -44,7 +44,7 @@ export async function createPerfilProveedor(perfil: ProfileProveedor): Promise<P
 }
 
 export async function getPerfilProveedor(correo: string/* , usuario: ProfilesUser */): Promise<ProfileProveedor> {
-    const { data } = await api.get<ProfileProveedor>(`${"/api/perfil-servidor"}/${correo}`);
+    const { data } = await api.get<ProfileProveedor>(`${"/api/perfil-servidor/e"}/${correo}`);
     console.log("esta es la data mi rey: ", data);
     return {
         usuario: data.usuario,
@@ -54,6 +54,11 @@ export async function getPerfilProveedor(correo: string/* , usuario: ProfilesUse
         horarioDisponibilidad: data.horarioDisponibilidad ?? "",
         ratingPromedio: data.ratingPromedio ?? 0,
     };
+}
+
+export async function getByIdPerfilProveedor(id:string): Promise<ProfileProveedor> {
+    const {data} = await api.get<ProfileProveedor>(`${"/api/perfil-servidor/i"}/${id}`);
+    return data;
 }
 
 export async function updatePerfilProveedor(correo: string, perfil: Partial<ProfileProveedor>): Promise<ProfileProveedor> {

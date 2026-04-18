@@ -1,5 +1,5 @@
 import api from "./axiosAuth";
-import type { AuthUser } from "../types/types";
+import type { AuthUser } from "../types/userTypes";
 
 export async function login(correo: string, password: string) {
     const response = await api.post<{ token: string }>(

@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "../../auth/authProvider";
 import { useProfile } from "../../hooks/usePerfil";
-import type { ProfileProveedor } from "../../types/types";
+import type { ProfileProveedor } from "../../types/userTypes";
 import PerfilUsuario from "./perfilGeneralUsuario";
 import { isAxiosError } from "axios";
 import { mapValidationErrors } from "../../utils/mapValidationErrors";

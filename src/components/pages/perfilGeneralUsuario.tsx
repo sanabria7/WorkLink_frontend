@@ -1,4 +1,4 @@
-import type { ProfilesUser } from "../../types/types";
+import type { ProfilesUser } from "../../types/userTypes";
 import Icon from "../misc/icon";
 
 interface Props {

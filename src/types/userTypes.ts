@@ -1,4 +1,3 @@
-/* Solicitudes HTTP */
 export interface AuthResponse {
     body: {
         user: AuthUser;

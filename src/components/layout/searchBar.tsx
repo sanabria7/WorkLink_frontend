@@ -1,47 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SbLocationModal from "../modals/sb-LocationModal";
+import SbKeyModal from "../modals/sb-KeyModal";
 import SbDateTimeModal from "../modals/sb-DateTimeModal";
 import Icon from "../misc/icon";
+import SbServiceModal from "../modals/sb-ServiceModal";
 
 export default function SearchBar() {
-
-    const [location, setLocation] = useState("");
+    const [palabra, setPalabra] = useState("");
     const [dateTime, setDateTime] = useState("");
     const [service, setService] = useState("");
-    const [openModal, setOpenModal] = useState<null | "location" | "dateTime" | "service">(null);
+    const [openModal, setOpenModal] = useState<null | "palabra" | "dateTime" | "service">(null);
 
     const navigate = useNavigate();
 
-    function handleSearch(evento: React.SubmitEvent<HTMLFormElement>): void {
+    async function handleSearch(evento: React.SubmitEvent<HTMLFormElement>) {
         evento.preventDefault();
-        const query = new URLSearchParams({location, date: dateTime, service}).toString();
+        const query = new URLSearchParams({palabra, date: dateTime, service}).toString();
         navigate(`/busqueda?${query}`);
+        setPalabra("");
+        setOpenModal(null);
     }
 
     return (
         <form onSubmit={handleSearch} role="search" aria-label="Formulario de búsqueda">
-            <button type="button" className="btn-searchbar" aria-label="Agregar ubicación" onClick={() => setOpenModal("location")}>
-                <span>{location || "Agregar ubicación"}</span>
-            </button>
-            <button type="button" className="btn-searchbar" aria-label="Agregar fecha" onClick={()=> setOpenModal("dateTime")}>
+            <div className="btn-searchbar" aria-label="Palabra clave" onClick={() => setOpenModal("palabra")}>
+                <span>{palabra || "Palabra clave"}</span>
+            </div>
+            <div className="btn-searchbar" aria-label="Agregar fecha" onClick={()=> setOpenModal("dateTime")}>
                 <span>{dateTime || "Agregar fecha"}</span>
-            </button>
-            <button type="button" className="btn-searchbar" aria-label="Agregar servicio" onClick={() => setOpenModal("service")}>
+            </div>
+            <div className="btn-searchbar" aria-label="Agregar servicio" onClick={() => setOpenModal("service")}>
                 <span>{service || "Agregar servicio"}</span>
-            </button>
+            </div>
             <button type="submit" className="btn-primary" datatype="submit" aria-label="Buscar">
                 <span><Icon name="search"></Icon></span>
             </button>
             {/* Modales */}
-            {openModal === "location" && (
-                <SbLocationModal value={location} onChange={setLocation} onClose={()=>setOpenModal(null)}></SbLocationModal>
+            {openModal === "palabra" && (
+                <SbKeyModal value={palabra} onChange={setPalabra} onClose={()=>setOpenModal(null)}/>
             )}
             {openModal === "dateTime" && (
-                <SbDateTimeModal value={dateTime} onChange={setDateTime} onClose={()=>setOpenModal(null)}></SbDateTimeModal>
+                <SbDateTimeModal value={dateTime} onChange={setDateTime} onClose={()=>setOpenModal(null)}/>
             )}
             {openModal === "service" && (
-                <></>
+                <SbServiceModal onChange={setService} onClose={()=>setOpenModal(null)}/>
             )}
         </form>
     );

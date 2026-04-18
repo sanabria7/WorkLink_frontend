@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as profilesService from "../../api/profilesService";
-import type { ProfileProveedor } from "../../types/types";
+import type { ProfileProveedor } from "../../types/userTypes";
 
 export default function ProveedorPublicView() {
     const { correo } = useParams<{ correo: string }>();

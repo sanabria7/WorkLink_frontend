@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useEffect, use } from "react";
 import * as authService from "../api/authService";
 import * as profilesService from "../api/profilesService";
-import type { ProfileCliente, ProfileProveedor, ProfilesUser, AuthUser } from "../types/types";
+import type { ProfileCliente, ProfileProveedor, ProfilesUser, AuthUser } from "../types/userTypes";
 
 interface AuthContextType {
     isAuthenticated: boolean;

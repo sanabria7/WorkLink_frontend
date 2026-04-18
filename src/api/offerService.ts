@@ -6,8 +6,8 @@ export async function crearServicio(servicio: Service): Promise<Service> {
   return data;
 }
 
-export async function buscarServicio(servicio: Service): Promise<Service> {
-  const { data } = await api.post<Service>("/servicio/busqueda", servicio);
+export async function buscarServicio(query: string): Promise<Service[]> {
+  const { data } = await api.post<Service[]>("/servicio/busqueda", {query});
   return data;
 }
 

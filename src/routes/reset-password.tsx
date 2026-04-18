@@ -83,7 +83,7 @@ export default function ResetPassword() {
                         value={token ?? ""}
                         onChange={(evento) => setToken(evento.target.value)}
                         required />
-                    <small>Introduce el código que te enviamos por correo</small>
+                    <small><strong>Introduce el código que te enviamos por correo</strong></small>
                 </>
             )}
             <label htmlFor="password">Introduce la nueva contraseña</label>

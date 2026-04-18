@@ -23,6 +23,25 @@ export function useService() {
     }
   }, []);
 
+  const buscarServicio = useCallback(async (query: string) => {
+    if (!query || query.trim() === "") {
+      setLoading(false);
+      return [];
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const resultados = await offerService.buscarServicio(query);
+      return resultados;
+    } catch (err:any) {
+      if(err.response && err.response.status === 404) return [];
+      setError(err)
+      throw err;
+    }finally{
+      setLoading(false);
+    }
+  }, []);
+
   const updateServicio = useCallback(async (id: string, payload: Service) => {
     setSaving(true);
     setError(null);
@@ -74,6 +93,7 @@ export function useService() {
     error,
     crearServicio,
     updateServicio,
+    buscarServicio,
     getServicioById,
     getAllServices,
     setService, // útil para inputs controlados

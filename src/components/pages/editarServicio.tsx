@@ -14,9 +14,8 @@ export default function EditarServicio() {
     const [errorResponse, setErrorResponse] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        if (id) {
-            getServicioById(id);
-        }
+        if (!id) return;
+        getServicioById(id);
     }, [id, getServicioById]);
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -74,7 +73,7 @@ export default function EditarServicio() {
             <select
                 id="categoria"
                 value={service.categoria}
-                onChange={(e) => setService({ ...service, categoria: e.target.value as Categoria})}
+                onChange={(e) => setService({ ...service, categoria: e.target.value as Categoria })}
                 required
             >
                 <option value="" disabled hidden>-- Elige una categoría --</option>
@@ -117,7 +116,7 @@ export default function EditarServicio() {
                     name="modalidad"
                     value="Online"
                     checked={service.modalidad === "Online"}
-                    onChange={(e) => setService({ ...service, modalidad: e.target.value as "Presencial" | "Online"})}
+                    onChange={(e) => setService({ ...service, modalidad: e.target.value as "Presencial" | "Online" })}
                 />
                 <label htmlFor="modalidad-online">Online</label>
             </div>

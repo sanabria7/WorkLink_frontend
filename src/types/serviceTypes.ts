@@ -1,4 +1,4 @@
-import type { ProveedorDTO } from "./types";
+import type { ProfileProveedor } from "./userTypes";
 
 export type Categoria = "Arte" | "Educacion" | "Eventos";
 
@@ -11,9 +11,9 @@ export interface Service {
     duracion: number;
     modalidad: "Presencial" | "Online";
     ubicacion: string;
-    proveedorId: number | string;
+    proveedorId: string;
 }
 
 export interface profilesService extends Service {
-    proveedor: ProveedorDTO;
+    proveedor: ProfileProveedor;
 }

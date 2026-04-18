@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import * as profilesService from "../api/profilesService";
-import type { AuthUser, ProfileCliente, ProfileProveedor, ProfilesUser } from "../types/types";
+import type { AuthUser, ProfileCliente, ProfileProveedor, ProfilesUser } from "../types/userTypes";
 
 /**
  * useProfile

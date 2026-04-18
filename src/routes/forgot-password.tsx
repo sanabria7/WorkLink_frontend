@@ -49,8 +49,8 @@ export default function ForgotPassword() {
                 onChange={(evento) => setCorreo(evento.target.value)}
                 required />
             <button type="submit" disabled={loading} aria-busy={loading}>{loading ? "Enviando mail..." : "Enviar enlace de recuperación"}</button>
-            <button type="button" className="btn-tertiary">
-                <Link to="/login">Cancelar</Link>
+            <button type="button" style={{backgroundColor:"transparent", color:"#0077ff"}} className="btn-tertiary">
+                <Link to="/login" style={{ textDecoration: "none", color: "inherit"}}>Cancelar</Link>
             </button>
         </form>
     );
