@@ -20,6 +20,9 @@ import MisServicios from './routes/proveedor/listaServicios.tsx';
 import EditarServicio from './components/pages/editarServicio.tsx';
 import ResultadosBusqueda from './routes/resultados.tsx';
 import Servicio from './routes/servicio/servicioVista.jsx';
+import Calendario from './routes/proveedor/calendario.tsx';
+import ConfigurarHorarios from './components/pages/configHorarios.tsx';
+import MisReservas from './routes/cliente/listaReservas.tsx';
 
 const router = createBrowserRouter([
     {
@@ -46,16 +49,18 @@ const router = createBrowserRouter([
                         element: <RolRoute requiredRol='cliente' />,
                         children: [
                             { path: "/home", element: <Home /> },
+                            { path: "/mis-reservas", element: <MisReservas /> },
                         ]
                     },
                     {
                         element: <RolRoute requiredRol="proveedor" />,
                         children: [
                             { path: "/dashboard", element: <Dashboard /> },
-                            { path: "/calendario", element: <></> },
                             { path: "/crear-servicio", element: <CrearServicio /> },
                             { path: "/editar-servicio/:id", element: <EditarServicio /> },
-                            { path: "/mis-servicios", element: <MisServicios /> }
+                            { path: "/mis-servicios", element: <MisServicios /> },
+                            { path: "/calendario", element: <Calendario /> },
+                            {path: "/configurar-horarios", element: <ConfigurarHorarios/>}
                         ]
                     },
                 ]

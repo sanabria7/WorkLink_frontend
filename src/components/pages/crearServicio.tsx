@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "../misc/icon";
 import { useAuth } from "../../auth/authProvider";
+import { hasHorarios } from "../../api/horariosService";
 import { useNavigate } from "react-router-dom";
 import { useService } from "../../hooks/useService";
 import type { Categoria, Service } from "../../types/serviceTypes";
 import { isAxiosError } from "axios";
 import { mapValidationErrors } from "../../utils/mapValidationErrors";
 import { mapGlobalErrors } from "../../utils/mapGlobalErrors";
+import DurationSelect from "../selectDuracion/duracionSelect";
 
 export default function CrearServicio() {
     const { perfilProveedor } = useAuth();
@@ -15,29 +17,70 @@ export default function CrearServicio() {
 
     const [titulo, setTitulo] = useState("");
     const [descripcion, setDescripcion] = useState("");
-    const [categoria, setCategoria] = useState<Categoria | "">("");
-    const [precio, setPrecio] = useState(0);
-    const [duracion, setDuracion] = useState(0);
-    const [modalidad, setModalidad] = useState<"Presencial" | "Online" | "">("");
+    const [categoria, setCategoria] = useState<Categoria | null>(null);
+    const [precio, setPrecio] = useState("");
+    const [duracion, setDuracion] = useState<number | "">("");
+    const [modalidad, setModalidad] = useState<"Presencial" | "Online" | null>(null);
     const [ubicacion, setUbicacion] = useState("");
     const [errorResponse, setErrorResponse] = useState<Record<string, string>>({});
+
+    const [tieneHorarios, setTieneHorarios] = useState<boolean | null>(null);
+    const [verificarHorarios, setVerificarHorarios] = useState(true);
+
+    const proveedorId = perfilProveedor?.id;
+
+    useEffect(() => {
+        if (!proveedorId) {
+            setVerificarHorarios(false);
+            return;
+        }
+
+        const verificar = async () => {
+            try {
+                console.log("Verificando horarios para proveedor ID:", proveedorId);
+                const resultados = await hasHorarios(proveedorId);
+                setTieneHorarios(resultados);
+                console.log("Resultados Horarios:", resultados);
+            } catch (error) {
+                console.error("Error al verificar horarios:", error);
+                setTieneHorarios(false);
+            } finally {
+                setVerificarHorarios(false);
+            }
+        };
+        verificar();
+    }, [proveedorId]);
 
     async function handleSubmit(evento: React.SubmitEvent<HTMLFormElement>) {
         evento.preventDefault();
         console.log(perfilProveedor);
-        if (!perfilProveedor?.id) {
+        if (!proveedorId) {
             console.log("No se encontró ID del proveedor");
             return;
         }
+        if (!categoria || !modalidad) {
+            setErrorResponse({
+                general: "Completa los campos vacíos"
+            });
+            return;
+        }
+
+        if (duracion === "") {
+            setErrorResponse({
+                general: "Debes seleccionar una duración"
+            });
+            return;
+        }
+
         const servicio: Service = {
             titulo,
             descripcion,
-            categoria: categoria as Categoria,
-            precio,
+            categoria,
+            precio: Number(precio),
             duracion,
-            modalidad: modalidad as "Presencial" | "Online",
+            modalidad,
             ubicacion,
-            proveedorId: perfilProveedor.id,
+            proveedorId,
         }
         try {
             await crearServicio(servicio);
@@ -58,6 +101,27 @@ export default function CrearServicio() {
                 setErrorResponse({ general: "Error desconocido" });
             }
         }
+    }
+
+    if (verificarHorarios) return <p>Verificando disponibilidad de horarios...</p>
+
+    if (tieneHorarios === false) {
+        return (
+            <div style={{ maxWidth: "42rem", margin: "3rem auto 0", padding: "2.5rem", backgroundColor: "white", borderRadius: "1.5rem", boxShadow: "0 10px 15px rgba(0,0,0,0.1)", textAlign: "center" }}>
+                <Icon name="calendar" />
+                <h1 style={{ fontSize: "1.875rem", fontWeight: "700", marginBottom: "0.75rem" }}>
+                    Configura tus horarios primero
+                </h1>
+                <p style={{ fontSize: "1.125rem", color: "#4B5563", marginBottom: "2rem" }}>
+                    Para poder publicar servicios, necesitas definir tus días y horarios de atención.
+                </p>
+                <button
+                    onClick={() => navigate("/configurar-horarios")}
+                    style={{ backgroundColor: "#2563EB", color: "white", padding: "1rem 2.5rem", borderRadius: "1rem", fontSize: "1.125rem", fontWeight: "600", border: "none", cursor: "pointer", transition: "background-color 0.2s" }}>
+                    Ir a configurar mis horarios
+                </button>
+            </div>
+        );
     }
 
     return (
@@ -93,7 +157,7 @@ export default function CrearServicio() {
                     {errorResponse.descripcion}
                 </span>}
             <label htmlFor="categoria">Categoria</label>
-            <select id="categoria" name="categoria" value={categoria} onChange={(evento) => setCategoria(evento.target.value as Categoria)} required>
+            <select id="categoria" name="categoria" value={categoria ?? ""} onChange={(evento) => setCategoria(evento.target.value as Categoria)} required>
                 <option value="" disabled hidden>-- Elige una categoria --</option>
                 <option value="Arte">Arte</option>
                 <option value="Educacion">Educación</option>
@@ -110,22 +174,17 @@ export default function CrearServicio() {
                 type="number"
                 value={precio}
                 inputMode="numeric"
-                onChange={(evento) => setPrecio(Number(evento.target.value))} required />
+                onChange={(evento) => setPrecio(evento.target.value)} required />
             {errorResponse.precio &&
                 <span className="errorMessage">
                     <Icon name="error" />
                     {errorResponse.precio}
                 </span>}
             <label htmlFor="duracion">Duración</label>
-            <input id="duracion"
-                name="duracion"
-                type="number"
-                min="30"
+            <DurationSelect
                 value={duracion}
-                inputMode="numeric"
-                onChange={(evento) => setDuracion(Number(evento.target.value))}
-                placeholder="Mínimo 30 minutos"
-                required />
+                onChange={(evento) => setDuracion(evento)}
+            />
             {errorResponse.duracion &&
                 <span className="errorMessage">
                     <Icon name="error" />
@@ -139,14 +198,14 @@ export default function CrearServicio() {
                     value="Presencial"
                     checked={modalidad === "Presencial"}
                     onChange={(evento) => setModalidad(evento.target.value as "Presencial" | "Online")} required />
-                <label htmlFor="modalidad-online">Presencial</label>
+                <label htmlFor="modalidad-presencial">Presencial</label>
                 <input id="modalidad-online"
                     type="radio"
                     name="modalidad"
                     value="Online"
                     checked={modalidad === "Online"}
                     onChange={(evento) => setModalidad(evento.target.value as "Presencial" | "Online")} required />
-                <label htmlFor="modalidad">Online</label>
+                <label htmlFor="modalidad-online">Online</label>
                 {errorResponse.modalidad &&
                     <span className="errorMessage">
                         <Icon name="error" />
@@ -164,7 +223,7 @@ export default function CrearServicio() {
                     <Icon name="error" />
                     {errorResponse.ubicacion}
                 </span>}
-            <button type="submit" disabled={saving} aria-busy={saving} onClick={() => console.log("clic")}>{saving ? "Creando servicio..." : "Publicar"}</button>
+            <button type="submit" disabled={saving} aria-busy={saving}>{saving ? "Creando servicio..." : "Publicar"}</button>
             <button type="reset" onClick={() => navigate("/dashboard")}>Cancelar</button>
         </form>
     );

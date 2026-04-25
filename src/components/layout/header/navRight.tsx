@@ -2,12 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Icon from "../../misc/icon";
 import { useAuth } from "../../../auth/authProvider";
+import { useUserMenu } from "../../../hooks/useUserMenu";
 
 export default function NavRight() {
   const { isAuthenticated, user, perfilCliente, perfilProveedor, logout, cambiarRol } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLUListElement | null>(null);
+  const menuItems = useUserMenu(user?.rol, navigate, handleLogOut);
 
   const perfilName =
     user?.rol === "cliente"
@@ -78,14 +80,20 @@ export default function NavRight() {
         <ul id="user-menu" className="dropdown" role="menu" ref={menuRef}>
           {!isAuthenticated ? (
             <>
-              <li><button onClick={() => setMenuOpen(false)}>Centro de ayuda</button></li>
-              <li><button onClick={() => { setMenuOpen(false); navigate("/login"); }}>Conviértete en proveedor</button></li>
+              <li><button onClick={() => setMenuOpen(false)} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Centro de ayuda</button></li>
+              <li><button onClick={() => { setMenuOpen(false); navigate("/login"); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Conviértete en proveedor</button></li>
             </>
           ) : (
             <>
-              <li>{perfilName}</li>
-              <li><button onClick={() => { setMenuOpen(false); navigate("/perfil"); }}>Perfil</button></li>
-              <li><button onClick={() => { setMenuOpen(false); handleLogOut(); }}>Cerrar Sesión</button></li>
+              <li style={{ display: "flex", alignItems: "initial"}}>{perfilName}</li>
+              {menuItems.map((item) => (
+                <li key={item.label}>
+                  <button onClick={() => { setMenuOpen(false); item.action(); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    {item.icon && <Icon name={item.icon}></Icon>}
+                    {item.label}
+                  </button>
+                </li>
+              ))}
             </>
           )}
         </ul>

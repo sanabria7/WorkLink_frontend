@@ -7,7 +7,7 @@ export async function crearServicio(servicio: Service): Promise<Service> {
 }
 
 export async function buscarServicio(query: string): Promise<Service[]> {
-  const { data } = await api.post<Service[]>("/servicio/busqueda", {query});
+  const { data } = await api.post<Service[]>("/servicio/busqueda", { query });
   return data;
 }
 
@@ -24,4 +24,13 @@ export async function getServicioById(id: string): Promise<Service> {
 export async function getAllServices(): Promise<Service[]> {
   const { data } = await api.get<Service[]>("/servicio/listar");
   return data;
+}
+
+export async function getProveedorByIdServices(id: string): Promise<Service[]> {
+  const { data } = await api.get<Service[]>(`${"/listar/"}${id}`);
+  return data;
+}
+
+export async function eliminarServicio(id: string): Promise<void> {
+  await api.delete<Service[]>(`${"/"}${id}`);
 }

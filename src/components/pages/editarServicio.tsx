@@ -5,12 +5,32 @@ import Icon from "../misc/icon";
 import { isAxiosError } from "axios";
 import { mapValidationErrors } from "../../utils/mapValidationErrors";
 import { mapGlobalErrors } from "../../utils/mapGlobalErrors";
-import type { Categoria } from "../../types/serviceTypes";
+import type { Categoria, Service } from "../../types/serviceTypes";
+import DurationSelect from "../selectDuracion/duracionSelect";
+
+type FormState = {
+    titulo: string;
+    descripcion: string;
+    categoria: Categoria | "";
+    precio: string;
+    duracion: number | "";
+    modalidad: "Presencial" | "Online" | "";
+    ubicacion: string;
+}
 
 export default function EditarServicio() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { service, setService, getServicioById, updateServicio, loading, saving } = useService();
+    const { service, getServicioById, updateServicio, loading, saving } = useService();
+    const [form, setForm] = useState<FormState>({
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        precio: "",
+        duracion: "",
+        modalidad: "",
+        ubicacion: "",
+    });
     const [errorResponse, setErrorResponse] = useState<Record<string, string>>({});
 
     useEffect(() => {
@@ -18,12 +38,37 @@ export default function EditarServicio() {
         getServicioById(id);
     }, [id, getServicioById]);
 
+    useEffect(() => {
+        if (service) {
+            setForm({
+                titulo: service.titulo,
+                descripcion: service.descripcion,
+                categoria: service.categoria,
+                precio: String(service.precio),
+                duracion: service.duracion,
+                modalidad: service.modalidad,
+                ubicacion: service.ubicacion,
+            });
+        }
+    }, [service]);
+
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!service) return;
+        if (!id || !service) return;
+
+        const updateData: Service = {
+            titulo: form.titulo,
+            descripcion: form.descripcion,
+            categoria: form.categoria as Categoria,
+            precio: Number(form.precio),
+            duracion: Number(form.duracion),
+            modalidad: form.modalidad as "Presencial" | "Online",
+            ubicacion: form.ubicacion,
+            proveedorId: service.proveedorId,
+        };
 
         try {
-            await updateServicio(id!, service);
+            await updateServicio(id!, updateData);
             alert("Servicio actualizado correctamente");
             navigate("/mis-servicios", { replace: true });
         } catch (error: unknown) {
@@ -58,22 +103,22 @@ export default function EditarServicio() {
             <input
                 id="titulo"
                 type="text"
-                value={service.titulo}
-                onChange={(e) => setService({ ...service, titulo: e.target.value })}
+                value={form.titulo}
+                onChange={(e) => setForm({ ...form, titulo: e.target.value })}
                 required
             />
             <label htmlFor="descripcion">Descripción</label>
             <textarea
                 id="descripcion"
-                value={service.descripcion}
-                onChange={(e) => setService({ ...service, descripcion: e.target.value })}
+                value={form.descripcion}
+                onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
                 required
             />
             <label htmlFor="categoria">Categoría</label>
             <select
                 id="categoria"
-                value={service.categoria}
-                onChange={(e) => setService({ ...service, categoria: e.target.value as Categoria })}
+                value={form.categoria}
+                onChange={(e) => setForm({ ...form, categoria: e.target.value as Categoria })}
                 required
             >
                 <option value="" disabled hidden>-- Elige una categoría --</option>
@@ -85,19 +130,14 @@ export default function EditarServicio() {
             <input
                 id="precio"
                 type="number"
-                value={service.precio}
-                onChange={(e) => setService({ ...service, precio: Number(e.target.value) })}
+                value={form.precio}
+                onChange={(e) => setForm({ ...form, precio: e.target.value })}
                 required
             />
             <label htmlFor="duracion">Duración</label>
-            <input
-                id="duracion"
-                type="number"
-                min="30"
-                value={service.duracion}
-                onChange={(e) => setService({ ...service, duracion: Number(e.target.value) })}
-                placeholder="Mínimo 30 minutos"
-                required
+            <DurationSelect
+                value={form.duracion || ""}
+                onChange={(e) => setForm({...form, duracion: e})}
             />
             <label>Modalidad</label>
             <div className="radioButtonGroup">
@@ -106,8 +146,8 @@ export default function EditarServicio() {
                     type="radio"
                     name="modalidad"
                     value="Presencial"
-                    checked={service.modalidad === "Presencial"}
-                    onChange={(e) => setService({ ...service, modalidad: e.target.value as "Presencial" | "Online" })}
+                    checked={form.modalidad === "Presencial"}
+                    onChange={(e) => setForm({ ...form, modalidad: e.target.value as "Presencial" | "Online" })}
                 />
                 <label htmlFor="modalidad-presencial">Presencial</label>
                 <input
@@ -115,8 +155,8 @@ export default function EditarServicio() {
                     type="radio"
                     name="modalidad"
                     value="Online"
-                    checked={service.modalidad === "Online"}
-                    onChange={(e) => setService({ ...service, modalidad: e.target.value as "Presencial" | "Online" })}
+                    checked={form.modalidad === "Online"}
+                    onChange={(e) => setForm({ ...form, modalidad: e.target.value as "Presencial" | "Online" })}
                 />
                 <label htmlFor="modalidad-online">Online</label>
             </div>
@@ -125,8 +165,8 @@ export default function EditarServicio() {
                 id="ubicacion"
                 type="text"
                 name="ubicacion"
-                value={service.ubicacion}
-                onChange={(e) => setService({ ...service, ubicacion: e.target.value })}
+                value={form.ubicacion}
+                onChange={(e) => setForm({ ...form, ubicacion: e.target.value })}
                 required
             />
             <button type="submit" disabled={saving}>

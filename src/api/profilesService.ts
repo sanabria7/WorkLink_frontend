@@ -22,6 +22,7 @@ export async function getPerfilCliente(correo: string/* , usuario: ProfilesUser 
     const { data } = await api.get<ProfileCliente>(`${"/api/perfil-cliente"}/${correo}`);
     return {
         usuario: data.usuario,
+        id: data.id,
         ocupacion: data.ocupacion ?? "",
         ratingPromedio: data.ratingPromedio ?? 0,
         verificado: data.verificado ?? false,

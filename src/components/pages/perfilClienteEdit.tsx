@@ -71,9 +71,9 @@ export default function EditPerfilCliente() {
   return (
     <form className="edit-form" onSubmit={handleSubmit} aria-label="Editar perfil" aria-describedby="editPerfil-error">
       <h1>Editar perfil {user?.rol}</h1>
-      {error && (
+      {errorResponse && (
         <div id="editPerfil-error" role="alert" className="errorMessage">
-          Error cargando perfil: {String(error)}
+          Error cargando perfil: {String(errorResponse)}
         </div>
       )}
       <PerfilUsuario
