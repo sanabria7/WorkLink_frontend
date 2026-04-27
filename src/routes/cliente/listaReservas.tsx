@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import * as reservaService from "../../api/reservasService";
+import * as horariosService from "../../api/horariosService";
 import { useAuth } from "../../auth/authProvider";
 import type { ReservaDTO } from "../../types/reservaTypes";
-import Icon from "../../components/misc/icon";
+import CancelarReservaDialog from "../../components/modals/cancelarReservaModal";
+import { formatFecha, formatRangoHora } from "../../utils/formatFechas";
 
 export default function MisReservas() {
     const { perfilCliente } = useAuth();
     const [reservas, setReservas] = useState<ReservaDTO[]>([]);
     const [loading, setLoading] = useState(true);
+    const [reservaCancelar, setReservaCancelar] = useState<ReservaDTO | null>(null);
 
     const cargarReservas = async () => {
         if (!perfilCliente?.id) return;
@@ -27,11 +30,11 @@ export default function MisReservas() {
     }, [perfilCliente?.id]);
 
     const handleCancelar = async (codigoReserva: string) => {
-        if (!confirm("¿Estás seguro de que deseas cancelar esta reserva?")) return;
 
         try {
             const response = await reservaService.cancelarReserva(codigoReserva);
             if (response.exito) {
+                await horariosService.liberarSlotsReserva(codigoReserva);
                 alert("Reserva cancelada exitosamente");
                 cargarReservas();
             } else {
@@ -43,85 +46,130 @@ export default function MisReservas() {
         }
     };
 
+    const reservasOrdenadas = [...reservas].sort((a, b) => {
+        const horaA = a.rangoTiempoReservado.split(" - ")[0];
+        const horaB = b.rangoTiempoReservado.split(" - ")[0];
+
+        const fechaA = new Date(`${a.fechaReserva}T${horaA}`);
+        const fechaB = new Date(`${b.fechaReserva}T${horaB}`);
+
+        return fechaA.getTime() - fechaB.getTime();
+    });
+
+    function puedeCancelar(reserva: ReservaDTO) {
+        const horaInicio = reserva.rangoTiempoReservado.split(" - ")[0];
+        const fechaReserva = new Date(`${reserva.fechaReserva}T${horaInicio}`);
+
+        const limiteCancelacion = new Date(fechaReserva);
+        limiteCancelacion.setDate(limiteCancelacion.getDate() - 1);
+
+        return new Date() < limiteCancelacion;
+    }
+
     if (loading) {
         return <p style={{ padding: "2rem", textAlign: "center" }}>Cargando tus reservas...</p>;
     }
 
     return (
-        <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-            <h1 style={{ fontSize: "2rem", fontWeight: "700", marginBottom: "2rem" }}>Mis Reservas</h1>
+        <div style={{ padding: "2rem", maxWidth: "1300px", margin: "0 auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+                <h1 style={{ fontSize: "2rem", fontWeight: 700 }}>Mis Reservas</h1>
+            </div>
 
             {reservas.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "4rem", backgroundColor: "#f9fafb", borderRadius: "16px" }}>
-                    <Icon name="calendar"/>
-                    <p style={{ marginTop: "1.5rem", color: "#6b7280", fontSize: "1.1rem" }}>
-                        Aún no tienes reservas realizadas
-                    </p>
+                <div style={{ textAlign: "center", padding: "4rem", backgroundColor: "#f9fafb", borderRadius: "20px", border: "1px dashed #d1d5db" }}>
+                    <p style={{ color: "#6b7280" }}>Aún no tienes reservas realizadas</p>
                 </div>
             ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {reservas.map((reserva) => (
-                        <div
-                            key={reserva.idReserva}
-                            style={{
-                                backgroundColor: "white",
-                                borderRadius: "16px",
-                                padding: "1.5rem",
-                                border: "1px solid #e5e7eb",
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
-                        >
-                            <div style={{ flex: 1 }}>
-                                <h3 style={{ margin: "0 0 8px 0", fontWeight: "600" }}>{reserva.tituloServicio}</h3>
-                                <p style={{ margin: "4px 0", color: "#6b7280" }}>
-                                    {reserva.fechaReserva} • {reserva.rangoTiempoReservado}
-                                </p>
-                                <p style={{ color: "#6b7280" }}>
-                                    {reserva.modalidad} • ${reserva.precio} • {reserva.duracionServicio} min
-                                </p>
-                            </div>
+                <div style={{ backgroundColor: "white", borderRadius: "20px", overflow: "hidden", border: "1px solid #e5e7eb" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead>
+                            <tr style={{ backgroundColor: "#f9fafb", textAlign: "left" }}>
+                                <th style={thStyle}>Servicio</th>
+                                <th style={thStyle}>Fecha</th>
+                                <th style={thStyle}>Horario</th>
+                                <th style={thStyle}>Modalidad</th>
+                                <th style={thStyle}>Precio</th>
+                                <th style={thStyle}>Estado</th>
+                                <th style={thStyle}>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reservasOrdenadas.map((reserva) => {
+                                const cancelable = puedeCancelar(reserva);
 
-                            <div style={{ textAlign: "right" }}>
-                                <span style={{
-                                    display: "inline-block",
-                                    padding: "6px 14px",
-                                    borderRadius: "9999px",
-                                    fontSize: "0.9rem",
-                                    fontWeight: "600",
-                                    backgroundColor: 
-                                        reserva.estadoReserva === "EN_CURSO" ? "#dbeafe" :
-                                        reserva.estadoReserva === "CANCELADA" ? "#fee2e2" : "#d1fae5",
-                                    color: 
-                                        reserva.estadoReserva === "EN_CURSO" ? "#1e40af" :
-                                        reserva.estadoReserva === "CANCELADA" ? "#b91c1c" : "#166534"
-                                }}>
-                                    {reserva.estadoReserva}
-                                </span>
+                                return (
+                                    <tr key={reserva.idReserva} style={{ borderTop: "1px solid #f3f4f6" }}>
+                                        <td style={tdStyle}>
+                                            <div>
+                                                <p style={{ fontWeight: 600 }}>{reserva.tituloServicio}</p>
+                                                <p style={{ fontSize: "0.85rem", color: "#6b7280" }}>{reserva.categoriaServicio}</p>
+                                            </div>
+                                        </td>
 
-                                {reserva.estadoReserva === "EN_CURSO" && (
-                                    <button
-                                        onClick={() => handleCancelar(reserva.idReserva!)}
-                                        style={{
-                                            marginTop: "12px",
-                                            padding: "8px 16px",
-                                            backgroundColor: "#ef4444",
-                                            color: "white",
-                                            border: "none",
-                                            borderRadius: "8px",
-                                            cursor: "pointer",
-                                            fontSize: "0.9rem"
-                                        }}
-                                    >
-                                        Cancelar reserva
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                                        <td style={tdStyle}>{formatFecha(reserva.fechaReserva)}</td>
+                                        <td style={tdStyle}>{formatRangoHora(reserva.rangoTiempoReservado)}</td>
+                                        <td style={tdStyle}>{reserva.modalidad}</td>
+                                        <td style={tdStyle}>${reserva.precio}</td>
+
+                                        <td style={tdStyle}>
+                                            <span style={{
+                                                padding: "6px 12px",
+                                                borderRadius: "999px",
+                                                fontSize: "0.85rem",
+                                                fontWeight: 600,
+                                                backgroundColor: reserva.estadoReserva === "EN_CURSO" ? "#dbeafe" : reserva.estadoReserva === "CANCELADA" ? "#fee2e2" : "#dcfce7",
+                                                color: reserva.estadoReserva === "EN_CURSO" ? "#1d4ed8" : reserva.estadoReserva === "CANCELADA" ? "#dc2626" : "#15803d"
+                                            }}>
+                                                {reserva.estadoReserva}
+                                            </span>
+                                        </td>
+
+                                        <td style={tdStyle}>
+                                            {reserva.estadoReserva === "EN_CURSO" && (
+                                                <button
+                                                    disabled={!cancelable}
+                                                    onClick={() => setReservaCancelar(reserva)}
+                                                    style={{
+                                                        backgroundColor: cancelable ? "#ef4444" : "#d1d5db",
+                                                        color: "white",
+                                                        border: "none",
+                                                        padding: "8px 14px",
+                                                        borderRadius: "10px",
+                                                        cursor: cancelable ? "pointer" : "not-allowed",
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    Cancelar
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             )}
+            <CancelarReservaDialog
+                reserva={reservaCancelar}
+                onClose={() => setReservaCancelar(null)}
+                onConfirm={async () => {
+                    if (!reservaCancelar?.idReserva) return;
+                    await handleCancelar(reservaCancelar.idReserva);
+                    setReservaCancelar(null);
+                }}
+            />
         </div>
     );
 }
+const thStyle = {
+    padding: "1rem",
+    fontSize: "0.85rem",
+    color: "#6b7280",
+    fontWeight: 600,
+};
+
+const tdStyle = {
+    padding: "1rem",
+};

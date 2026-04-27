@@ -29,6 +29,11 @@ export async function getPerfilCliente(correo: string/* , usuario: ProfilesUser 
     };
 }
 
+export async function getPerfilClienteById(id: string): Promise<ProfileCliente> {
+    const { data } = await api.get(`${"/api/perfil-cliente/i"}/${id}`);
+    return data;
+}
+
 export async function updatePerfilCliente(correo: string, perfil: Partial<ProfileCliente>): Promise<ProfileCliente> {
     const { data } = await api.put<ProfileCliente>(`${"/api/perfil-cliente"}/${correo}`, perfil);
     return data;
@@ -57,8 +62,8 @@ export async function getPerfilProveedor(correo: string/* , usuario: ProfilesUse
     };
 }
 
-export async function getByIdPerfilProveedor(id:string): Promise<ProfileProveedor> {
-    const {data} = await api.get<ProfileProveedor>(`${"/api/perfil-servidor/i"}/${id}`);
+export async function getByIdPerfilProveedor(id: string): Promise<ProfileProveedor> {
+    const { data } = await api.get<ProfileProveedor>(`${"/api/perfil-servidor/i"}/${id}`);
     return data;
 }
 

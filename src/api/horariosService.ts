@@ -1,5 +1,5 @@
 import api from "./axiosProfiles";
-import type { EstadosSlots, Horario, HorarioPorRango, HorariosPorFecha, HorasDisp } from "../types/horariosTypes";
+import type { EstadosSlots, Horario, HorarioPorRango, HorariosPorFecha, HorasDisp, ReservaSlots } from "../types/horariosTypes";
 
 /* Proveedor */
 export async function hasHorarios(id: string): Promise<boolean> {
@@ -35,5 +35,15 @@ export async function getFechasDisponibles(id: string) {
 
 export async function getHorariosPorFecha(payload: HorariosPorFecha): Promise<HorasDisp[]> {
     const { data } = await api.post<HorasDisp[]>("/api/horarios/getPorFecha", payload);
+    return data;
+}
+
+export async function reservarSlots(payload:ReservaSlots) {
+    const { data } = await api.put("/api/horarios/reservar", payload);
+    return data;
+}
+
+export async function liberarSlotsReserva(codigoReserva: string) {
+    const { data } = await api.put(`${"/api/horarios/liberar/"}${codigoReserva}`);
     return data;
 }

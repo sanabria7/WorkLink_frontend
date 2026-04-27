@@ -1,5 +1,5 @@
-import type { Service } from "./serviceTypes";
-import type { ClienteDTO, ProveedorDTO } from "./userTypes";
+import type { profilesService, Service } from "./serviceTypes";
+import type { ClienteDTO, ProfileCliente, ProfileProveedor, ProveedorDTO } from "./userTypes";
 
 export type estadoReserva = "EN_CURSO" | "CANCELADA" | "COMPLETADA";
 
@@ -26,13 +26,14 @@ export interface ReservaDTO extends CrearReservaDTO {
 }
 
 export interface ReservaCompleta extends ReservaDTO {
-    servicio?: Service;
-    cliente?: ClienteDTO;
-    proveedor?: ProveedorDTO;    
+    servicio?: profilesService;
+    cliente?: ProfileCliente;
+    proveedor?: ProfileProveedor;    
 }
 
 export interface ReservaResponse {
     exito: boolean;
     mensaje: string;
+    codigoReserva?: string;
     reservaDTO?: ReservaDTO;
 }

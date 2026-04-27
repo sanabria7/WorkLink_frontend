@@ -17,9 +17,7 @@ export default function SlotPersonalizado({ event }: Props) {
     return (
         <div style={{ display:"flex", gap:"0.5rem", alignItems:"center", fontSize: "1rem", lineHeight: 1.1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
             <div>
-                {event.estado === "Disponible"
-                    ? "Disponible"
-                    : "No disponible"}
+                {event.estado}
             </div>
             <strong style={{fontSize:"0.75rem"}}>{horaInicio} - {horaFin}</strong>
         </div>
