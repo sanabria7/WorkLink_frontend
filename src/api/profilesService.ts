@@ -70,3 +70,8 @@ export async function updatePerfilProveedor(correo: string, perfil: Partial<Prof
 export async function deletePerfilProveedor(correo: string): Promise<void> {
     await api.delete(`${"/api/perfil-servidor"}/${correo}`);
 }
+
+export async function obtenerTodosProveedores(): Promise<ProfileProveedor[]> {
+    const { data } = await api.get("api/perfil-servidor/all");
+    return data;
+}

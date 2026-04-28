@@ -34,3 +34,8 @@ export async function getProveedorByIdServices(id: string): Promise<Service[]> {
 export async function eliminarServicio(id: string): Promise<void> {
   await api.delete<Service[]>(`${"/"}${id}`);
 }
+
+export async function listarPorCategoria(categoria:string): Promise<Service[]> {
+  const { data } = await api.get<Service[]>(`/servicio/listar/categoria/${categoria}`);
+  return data;
+}
