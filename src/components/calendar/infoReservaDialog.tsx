@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import Icon from "../misc/icon";
 import ReservaInfoCard from "./reservaInfoCard";
 import { useReservaDetalle } from "../../hooks/useReservaModal";
-import { formatFecha, formatHora } from "../../utils/formatFechas";
+import { formatFecha, formatRangoHora } from "../../utils/formatFechas";
 
 interface Props {
     open: boolean;
@@ -43,7 +43,7 @@ export default function DetallesReservaDialog({ open, codigoReserva, onClose }: 
                                     <ReservaInfoCard label="Código" value={reserva.idReserva} />
                                     <ReservaInfoCard label="Estado" value={reserva.estadoReserva} />
                                     <ReservaInfoCard label="Cliente" value={`${reserva.cliente?.usuario.nombre} ${reserva.cliente?.usuario.apellido}`} />
-                                    <ReservaInfoCard label="Horario" value={formatHora(reserva.rangoTiempoReservado)} />
+                                    <ReservaInfoCard label="Horario" value={formatRangoHora(reserva.rangoTiempoReservado)} />
                                     <ReservaInfoCard label="Fecha" value={formatFecha(reserva.fechaReserva)} />
                                     <ReservaInfoCard label="Categoría" value={reserva.categoriaServicio} />
                                     <ReservaInfoCard label="Modalidad" value={reserva.modalidad} />
