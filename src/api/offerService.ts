@@ -27,12 +27,12 @@ export async function getAllServices(): Promise<Service[]> {
 }
 
 export async function getProveedorByIdServices(id: string): Promise<Service[]> {
-  const { data } = await api.get<Service[]>(`${"/listar/"}${id}`);
+  const { data } = await api.get<Service[]>(`${"/servicio/listar/"}${id}`);
   return data;
 }
 
 export async function eliminarServicio(id: string): Promise<void> {
-  await api.delete<Service[]>(`${"/"}${id}`);
+  await api.delete(`${"/servicio/"}${id}`);
 }
 
 export async function listarPorCategoria(categoria:string): Promise<Service[]> {

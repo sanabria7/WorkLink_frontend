@@ -2,6 +2,7 @@ export interface HorasDisp {
     horaInicio: string;
     horaFin: string;
     idsSlots: string;
+    codigoReserva?: string;
 }
 
 export interface HorariosPorFecha {
@@ -27,7 +28,12 @@ export interface HorarioPorRango {
 
 export interface EstadosSlots {
     idsSlots: number[];
-    estado: "Disponible" | "No disponible";
+    estado: "Disponible" | "Reservado" | "No disponible";
+}
+
+export interface ReservaSlots {
+    idsSlots: number[];
+    codigoReserva: string;
 }
 
 export interface Evento {
@@ -35,5 +41,6 @@ export interface Evento {
     title: string;
     start: Date;
     end: Date;
-    estado: "Disponible" | "No disponible";
+    estado: "Disponible" | "Reservado" | "No disponible";
+    codigoReserva?: string;
 }

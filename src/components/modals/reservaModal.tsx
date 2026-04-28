@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { profilesService } from "../../types/serviceTypes";
 import * as horariosService from "../../api/horariosService";
 import * as reservaService from "../../api/reservasService"
@@ -21,7 +21,7 @@ interface ReservaModalProps {
 }
 
 export default function ReservaModal({ open, onClose, servicio }: ReservaModalProps) {
-    const { perfilCliente, isAuthenticated } = useAuth();
+    const { perfilCliente, isAuthenticated, authLoading } = useAuth();
     const navigate = useNavigate();
 
     const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(null);
@@ -68,10 +68,18 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
     }, [fechaSeleccionada, servicio])
 
     async function handleReservar() {
-        if (!isAuthenticated || !perfilCliente?.id) {
+        if (authLoading) return;
+
+        if (!isAuthenticated) {
             navigate("/login", { replace: true });
             return;
         }
+
+        if (!perfilCliente?.id) {
+            alert("Tu perfil se está cargando. Intenta nuevamente.");
+            return;
+        }
+
         if (!horaSeleccionada || !fechaSeleccionada) return;
 
         const slotSeleccionado = horasDisp.find(slot => slot.horaInicio === horaSeleccionada);
@@ -79,7 +87,7 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
 
         try {
             const reservaInicial: CrearReservaDTO = {
-                rangoTiempoReservado: horaSeleccionada,
+                rangoTiempoReservado: `${slotSeleccionado.horaInicio} - ${slotSeleccionado.horaFin}`,
                 fechaReserva: format(fechaSeleccionada, "yyyy-MM-dd"),
                 duracionServicio: servicio.duracion,
                 precio: servicio.precio,
@@ -96,35 +104,46 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
             }
             const response = await reservaService.crearReserva(reservaInicial);
 
-            if (response.exito) {
-                alert("Reserva realizada con éxito");
-                try {
-                    const idsArray = slotSeleccionado.idsSlots.split(",").map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-                    await horariosService.updateSlot({idsSlots: idsArray, estado: "No disponible"});
-                    console.log("Slor actualizado a No disponible");
-                } catch (error) {
-                    console.error("No se pudo actualizar el slot automáticamente:", error);
-                }
-                onClose();
-            } else {
-                alert(response.mensaje || "Error al realizar la reserva")
+            if (!response.exito || !response.reservaDTO?.idReserva) {
+                alert(response.mensaje || "No se pudo crear la reserva");
+                return;
             }
+            const codigoReserva = response.reservaDTO.idReserva;
+            try {
+                const idsArray = slotSeleccionado.idsSlots.split(",").map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+                await horariosService.reservarSlots({ idsSlots: idsArray, codigoReserva });
+                console.log("Slot RESERVADO");
+            } catch (error) {
+                console.error("No se pudo vincular la reserva con los slots:", error);
+            }
+            alert("Reserva realizada con éxito");
+            handleCloseModal();
         } catch (error) {
             console.error("Error al procesar la reserva", error);
         }
     }
 
-    function handleCloseModal() {
+    const resetModalState = useCallback(() => {
         setFechaSeleccionada(null);
         setHoraSeleccionada(null);
         setHorasDisp([]);
         setLoading(false);
+    }, [])
+
+    function handleCloseModal() {
+        resetModalState();
         onClose();
     }
 
     useEffect(() => {
         setHoraSeleccionada(null);
     }, [fechaSeleccionada]);
+
+    useEffect(() => {
+        if (!open) {
+            resetModalState();
+        }
+    }, [open, resetModalState]);
 
     return (
         <Dialog open={open} onClose={handleCloseModal} style={{ position: "fixed", inset: 0, zIndex: 50 }}>

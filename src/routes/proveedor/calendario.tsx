@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import type { Evento } from "../../types/horariosTypes";
 import SlotDialog from "../../components/modals/slotDialog";
 import SlotPersonalizado from "../../components/calendar/slot";
+import DetallesReservaDialog from "../../components/calendar/infoReservaDialog";
 
 const locales = { es };
 const localizer = dateFnsLocalizer({
@@ -28,6 +29,7 @@ export default function Calendario() {
     const [fecha, setFecha] = useState(new Date());
     const [loading, setLoading] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState<Evento | null>(null);
+    const [selectedReserva, setSelectedReserva] = useState<string | null>(null);
 
     const idProveedor = perfilProveedor?.id;
 
@@ -36,16 +38,18 @@ export default function Calendario() {
         setLoading(true);
         try {
             const data = await horariosService.getAll(idProveedor);
+            console.log("Horarios backend:", data);
             const eventosMap: Evento[] = data.map((item: any) => {
                 const fechaBase = parseISO(item.fecha);
                 const start = parse(item.horaInicio, "HH:mm:ss", fechaBase);
                 const end = parse(item.horaFin, "HH:mm:ss", fechaBase);
                 return {
                     id: item.id,
-                    title: item.estado || "Disponible",
+                    title: item.estado,
                     start,
                     end,
-                    estado: item.estado || "Disponible",
+                    estado: item.estado,
+                    codigoReserva: item.codigoReserva
                 };
             });
             setEvento(eventosMap);
@@ -60,7 +64,7 @@ export default function Calendario() {
         cargarHorarios();
     }, [cargarHorarios]);
 
-    async function cambiarEstadoSlot(nuevoEstado: "Disponible" | "No disponible") {
+    async function cambiarEstadoSlot(nuevoEstado: "Disponible" | "Reservado" | "No disponible") {
         if (!selectedEvent) return;
 
         try {
@@ -68,7 +72,7 @@ export default function Calendario() {
             setEvento((prev) =>
                 prev.map((ev) =>
                     ev.id === selectedEvent.id
-                        ? { ...ev, estado: nuevoEstado, tittle: nuevoEstado === "Disponible" ? "Disponible" : "No disponible" }
+                        ? { ...ev, estado: nuevoEstado, title: nuevoEstado }
                         : ev
                 ));
             alert(`Slot actualizado a: ${nuevoEstado}`);
@@ -119,7 +123,7 @@ export default function Calendario() {
                     selectable // permite al prov hacer clic en los días para seleccionar
                     date={fecha} // fecha que se muestra actualmente
                     view={view} // vista actual (mes, semana o día)
-                    views={{month:true, week:true, day:true}} // personaliza que opciones ver
+                    views={{ month: true, week: true, day: true }} // personaliza que opciones ver
                     onView={setView} // cuando el prov cambia de vista (mes -> semana) actualiza estado
                     onNavigate={setFecha} // cuando el prov cambia de mes o semana
                     onSelectSlot={(slotInfo) => { // cuando el prov hace clic en un día vacío, cambia a vista día
@@ -128,18 +132,25 @@ export default function Calendario() {
                             setView(Views.DAY);
                         }
                     }}
-                    onSelectEvent={(event) => setSelectedEvent(event as Evento)} // cuando el prov hace clic en un evento existente
-                    components={{event: SlotPersonalizado}}
-                    eventPropGetter={(event) => ({ // cambiar de color cada evento según su estado
-                        style: {
-                            backgroundColor: event.estado === "Disponible" ? "#dcfce7" : "#fee2e2",
-                            border: `1.5px solid ${event.estado === "Disponible" ? "#16a34a" : "#ef4444"}`,
-                            color: event.estado === "Disponible" ? "#166534" : "#991b1b",
-                            fontWeight: "bold",
-                            borderRadius: "8px",
-                            padding: "2px 6px",
-                        },
-                    })}
+                    onSelectEvent={(event) => {
+                        const eventoSeleccionado = event as Evento;
+                        if (
+                            eventoSeleccionado.estado === "Reservado" && eventoSeleccionado.codigoReserva
+                        ) {
+                            setSelectedReserva(eventoSeleccionado.codigoReserva);
+                            return;
+                        }
+                        setSelectedEvent(eventoSeleccionado);
+                    }}
+                    components={{ event: SlotPersonalizado }}
+                    eventPropGetter={(event) => {
+                        let backgroundColor = "#dcfce7";
+                        let border = "#16a34a";
+                        let color = "#166534";
+                        if (event.estado === "Reservado") { backgroundColor = "#dbeafe"; border = "#2563eb"; color = "#1e3a8a"; }
+                        if (event.estado === "No disponible") { backgroundColor = "#fee2e2"; border = "#ef4444"; color = "#991b1b"; }
+                        return { style: { backgroundColor, border: `1.5px solid ${border}`, color, fontWeight: "bold", borderRadius: "8px", }, };
+                    }}
                     style={{ height: 700 }}
                 />
             )}
@@ -148,6 +159,10 @@ export default function Calendario() {
                 onClose={() => setSelectedEvent(null)}
                 onChangeState={cambiarEstadoSlot}
             />
+            <DetallesReservaDialog
+                open={!!selectedReserva}
+                codigoReserva={selectedReserva ?? undefined}
+                onClose={() => setSelectedReserva(null)} />
         </div>
     );
 }
