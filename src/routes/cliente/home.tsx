@@ -1,7 +1,9 @@
+import LandingPage from "../../components/pages/landingPage";
+
 export default function Home() {
     return (
         <>
-            <h1>Home cliente</h1>
+            <LandingPage></LandingPage>
         </>
     );
 }

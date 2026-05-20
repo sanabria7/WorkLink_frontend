@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Service } from "../../types/serviceTypes";
 
 interface ServiceCardProps{
@@ -49,11 +50,11 @@ export default function ServiceCard({servicio}: ServiceCardProps) {
                             <span className="hr2">/{servicio.duracion/60}hr</span>
                         </div>
                     </div>
-                    <a className="button-component13" href={`http://localhost:5173/servicio/${servicio.id}`}>
+                    <Link to={`/servicio/${servicio.id}`} className="button-component13">
                         <div className="span">
                             <div className="e">Reservar ahora</div>
                         </div>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
