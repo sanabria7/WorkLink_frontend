@@ -222,6 +222,7 @@ input[type="text"],
         list-style: none;
         padding: 0.5rem 0;
         min-width: 180px;
+        z-index: 100;
 
         li {
           padding: 0.5rem 1rem;
