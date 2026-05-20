@@ -5,10 +5,14 @@ import type { profilesService } from "../../types/serviceTypes";
 import { getServicioById } from "../../api/offerService";
 import { getByIdPerfilProveedor } from "../../api/profilesService";
 import ReservaModal from "../../components/modals/reservaModal";
+import ServiceReviews from "../../components/reviews/serviceReviews";
+import { getReviewsByServicio } from "../../api/reviewService";
+import type { Review } from "../../types/userTypes";
 
 export default function Servicio() {
     const { id } = useParams<{ id: string }>();
     const [servicio, setServicio] = useState<profilesService | null>(null);
+    const [review, setReview] = useState<Review[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
@@ -17,6 +21,8 @@ export default function Servicio() {
             const perfilProveedor = await getByIdPerfilProveedor(servicio.proveedorId);
             const servicioCompleto: profilesService = { ...servicio, proveedor: perfilProveedor };
             setServicio(servicioCompleto);
+            const reviewsData = await getReviewsByServicio(servicio.id!);
+            setReview(reviewsData);
         })
             .catch(() => (console.log("No se pudo cargar el servicio")));
     }, [id])
@@ -55,14 +61,14 @@ export default function Servicio() {
                         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "3px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
                                 <Icon name="star_filled" />
-                                <span>{servicio.proveedor.ratingPromedio}</span>
+                                <span>{servicio.proveedor.ratingPromedio.toFixed(1)}</span>
                             </div>
                             <span style={{ fontWeight: "400", color: "grey" }}>
                                 Rating
                             </span>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "3px", borderInline: "1px solid #eaeaea" }}>
-                            <div>196</div>
+                            <div>{review.length}</div>
                             <span style={{ fontWeight: "400", color: "grey" }}>Reseñas</span>
                         </div>
                         <div style={{ display: "flex", color: "gray", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "3px" }}>
@@ -121,14 +127,11 @@ export default function Servicio() {
                     </div>
                     {/* Reseñas */}
                     <div style={{ backgroundColor: "", display: "flex", flexDirection: "column" }}>
-                        <h2 style={{ marginTop: "8px" }}>Reseñas</h2>
-                        <div style={{}}>
-
-                        </div>
+                        <ServiceReviews servicioId={servicio.id!}/>
                     </div>
                 </div>
             </section>
-            <ReservaModal open={modalOpen} onClose={()=>setModalOpen(false)} servicio={servicio}  />
+            <ReservaModal open={modalOpen} onClose={() => setModalOpen(false)} servicio={servicio} />
         </div>
     );
 }

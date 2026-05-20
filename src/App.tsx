@@ -19,10 +19,11 @@ import CrearServicio from './components/pages/crearServicio.tsx';
 import MisServicios from './routes/proveedor/listaServicios.tsx';
 import EditarServicio from './components/pages/editarServicio.tsx';
 import ResultadosBusqueda from './routes/resultados.tsx';
-import Servicio from './routes/servicio/servicioVista.jsx';
+import Servicio from './routes/servicio/servicioVista.tsx';
 import Calendario from './routes/proveedor/calendario.tsx';
 import ConfigurarHorarios from './components/pages/configHorarios.tsx';
 import MisReservas from './routes/cliente/listaReservas.tsx';
+import ProveedorReviews from './routes/proveedor/reviews.tsx';
 
 const router = createBrowserRouter([
     {
@@ -60,7 +61,8 @@ const router = createBrowserRouter([
                             { path: "/editar-servicio/:id", element: <EditarServicio /> },
                             { path: "/mis-servicios", element: <MisServicios /> },
                             { path: "/calendario", element: <Calendario /> },
-                            {path: "/configurar-horarios", element: <ConfigurarHorarios/>}
+                            { path: "/configurar-horarios", element: <ConfigurarHorarios /> },
+                            { path: "/reseñas-prov", element: <ProveedorReviews /> }
                         ]
                     },
                 ]

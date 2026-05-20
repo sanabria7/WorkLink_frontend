@@ -5,18 +5,21 @@ import { useAuth } from "../../auth/authProvider";
 import type { ReservaDTO } from "../../types/reservaTypes";
 import CancelarReservaDialog from "../../components/modals/cancelarReservaModal";
 import { formatFecha, formatRangoHora } from "../../utils/formatFechas";
+import ReviewModal from "../../components/modals/reviewModal";
 
 export default function MisReservas() {
     const { perfilCliente } = useAuth();
     const [reservas, setReservas] = useState<ReservaDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [reservaCancelar, setReservaCancelar] = useState<ReservaDTO | null>(null);
+    const [reviewReserva, setReviewReserva] = useState<ReservaDTO | null>(null);
 
     const cargarReservas = async () => {
         if (!perfilCliente?.id) return;
         setLoading(true);
         try {
             const data = await reservaService.getClienteReservaById(perfilCliente.id);
+            console.log("RESERVAS BACKEND:", data);
             setReservas(data);
         } catch (error) {
             console.error("Error cargando mis reservas:", error);
@@ -143,6 +146,12 @@ export default function MisReservas() {
                                                     Cancelar
                                                 </button>
                                             )}
+                                            <button
+                                                onClick={() => setReviewReserva(reserva)}
+                                                style={{ backgroundColor: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "10px", cursor: "pointer", fontWeight: "600" }}
+                                            >
+                                                Dejar Reseña
+                                            </button>
                                         </td>
                                     </tr>
                                 );
@@ -159,6 +168,11 @@ export default function MisReservas() {
                     await handleCancelar(reservaCancelar.idReserva);
                     setReservaCancelar(null);
                 }}
+            />
+            <ReviewModal
+                open={!!reviewReserva}
+                reserva={reviewReserva}
+                onClose={() => setReviewReserva(null)}
             />
         </div>
     );
