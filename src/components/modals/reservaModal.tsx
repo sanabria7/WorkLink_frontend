@@ -84,8 +84,11 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
 
         const slotSeleccionado = horasDisp.find(slot => slot.horaInicio === horaSeleccionada);
         if (!slotSeleccionado) return console.log("No se encontró el slot seleccionado");
-
+        
         try {
+            console.log("SERVICIO ENTERO:", servicio);
+            console.log("SERVICIO ID:", servicio.id);
+            console.log("NUMBER ID:", Number(servicio.id));
             const reservaInicial: CrearReservaDTO = {
                 rangoTiempoReservado: `${slotSeleccionado.horaInicio} - ${slotSeleccionado.horaFin}`,
                 fechaReserva: format(fechaSeleccionada, "yyyy-MM-dd"),
@@ -94,6 +97,7 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
                 totalPagado: servicio.precio,
                 clienteId: perfilCliente.id,
                 proveedorId: servicio.proveedorId,
+                servicioId: Number(servicio.id),
                 tituloServicio: servicio.titulo,
                 descripcionServicio: servicio.descripcion,
                 categoriaServicio: servicio.categoria,
@@ -102,6 +106,7 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
                 politicaCancelacion: "Cancela con 24 horas de anticipación",
                 esPagada: true
             }
+            console.log("RESERVA FINAL:", reservaInicial);
             const response = await reservaService.crearReserva(reservaInicial);
 
             if (!response.exito || !response.reservaDTO?.idReserva) {

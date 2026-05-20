@@ -5,7 +5,8 @@ export default function Panel() {
             <nav className="nav-panel">
                 <ul className="nav-links">
                     <li><Link to="/mis-servicios">Servicios</Link></li>
-                    <li><Link to="/calendario" >Calendario</Link></li>
+                    <li><Link to="/calendario">Calendario</Link></li>
+                    <li><Link to="/reseñas-prov">Reseñas</Link></li>
                 </ul>
             </nav>        
     );

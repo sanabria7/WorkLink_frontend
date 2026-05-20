@@ -45,19 +45,18 @@ export interface ProfileCliente extends ClienteDTO {
 
 export interface ProfileProveedor extends ProveedorDTO {
     usuario: ProfilesUser;
-    /* cedulaUrl?: string;
-    certificadoSaludUrl?: string;
-    certificadoAntecedentesUrl?: string;
-    certificadoInhabilidadesUrl?: string;
-    reviews?: Review[]; */
+    /* reviews?: Review[]; */
 }
 
 export interface Review {
     id?: string;
-    calificacion?: string;
-    comentario?: string;
+    calificacion: number;
+    comentario: string;
+    fechaCreacion?: string;
     clienteId?: string;
     proveedorId?: string;
+    idService?: number;
+    codigoReserva?: string;
 }
 
 export interface Ubicacion {

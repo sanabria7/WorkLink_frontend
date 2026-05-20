@@ -17,6 +17,7 @@ export interface CrearReservaDTO {
     totalPagado: number;
     clienteId: string;
     proveedorId: string;
+    servicioId: number;
     esPagada: boolean;
 }
 
