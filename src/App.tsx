@@ -24,6 +24,7 @@ import Calendario from './routes/proveedor/calendario.tsx';
 import ConfigurarHorarios from './components/pages/configHorarios.tsx';
 import MisReservas from './routes/cliente/listaReservas.tsx';
 import ProveedorReviews from './routes/proveedor/reviews.tsx';
+import CheckoutPage from './routes/cliente/checkout.tsx';
 
 const router = createBrowserRouter([
     {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
                         children: [
                             { path: "/home", element: <Home /> },
                             { path: "/mis-reservas", element: <MisReservas /> },
+                            { path: "/checkout", element: <CheckoutPage /> },
                         ]
                     },
                     {

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { profilesService } from "../../types/serviceTypes";
 import * as horariosService from "../../api/horariosService";
-import * as reservaService from "../../api/reservasService"
 import { format, isSameDay, parseISO } from "date-fns";
 import { useAuth } from "../../auth/authProvider";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,6 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { es } from "date-fns/locale";
 import type { HorasDisp } from "../../types/horariosTypes";
-import type { CrearReservaDTO } from "../../types/reservaTypes";
 
 interface ReservaModalProps {
     open: boolean;
@@ -21,7 +19,7 @@ interface ReservaModalProps {
 }
 
 export default function ReservaModal({ open, onClose, servicio }: ReservaModalProps) {
-    const { perfilCliente, isAuthenticated, authLoading } = useAuth();
+    const { perfilCliente } = useAuth();
     const navigate = useNavigate();
 
     const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(null);
@@ -68,64 +66,41 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
     }, [fechaSeleccionada, servicio])
 
     async function handleReservar() {
-        if (authLoading) return;
+        if (!servicio || !fechaSeleccionada || !horaSeleccionada || !perfilCliente?.id) return;
 
-        if (!isAuthenticated) {
-            navigate("/login", { replace: true });
-            return;
-        }
+        const slotsSeleccionado = horasDisp.find(slot => slot.horaInicio === horaSeleccionada);
+        if (!slotsSeleccionado) return;
 
-        if (!perfilCliente?.id) {
-            alert("Tu perfil se está cargando. Intenta nuevamente.");
-            return;
-        }
+        const idsSlots = slotsSeleccionado.idsSlots
+            .split(",")
+            .map(id => parseInt(id.trim()))
+            .filter(id => !isNaN(id));
 
-        if (!horaSeleccionada || !fechaSeleccionada) return;
+        navigate("/checkout", {
+            state: {
+                servicio,
+                idsSlots,
+                reserva: {
+                    categoriaServicio: servicio.categoria,
+                    clienteId: Number(perfilCliente.id),
+                    descripcionServicio: servicio.descripcion,
+                    duracionServicio: servicio.duracion,
+                    modalidad: servicio.modalidad,
+                    politicaCancelacion: "Cancela con 24 horas de anticipación",
+                    precio: servicio.precio,
+                    proveedorId: servicio.proveedorId,
+                    rangoTiempoReservado: `${slotsSeleccionado.horaInicio} - ${slotsSeleccionado.horaFin}`,
+                    servicioId: Number(servicio.id),
+                    tituloServicio: servicio.titulo,
+                    totalPagado: servicio.precio,
+                    ubicacion: servicio.ubicacion,
+                    fechaReserva: format(fechaSeleccionada, "yyyy-MM-dd"),
+                    esPagada: false,
+                },
+            },
+        });
 
-        const slotSeleccionado = horasDisp.find(slot => slot.horaInicio === horaSeleccionada);
-        if (!slotSeleccionado) return console.log("No se encontró el slot seleccionado");
-        
-        try {
-            console.log("SERVICIO ENTERO:", servicio);
-            console.log("SERVICIO ID:", servicio.id);
-            console.log("NUMBER ID:", Number(servicio.id));
-            const reservaInicial: CrearReservaDTO = {
-                rangoTiempoReservado: `${slotSeleccionado.horaInicio} - ${slotSeleccionado.horaFin}`,
-                fechaReserva: format(fechaSeleccionada, "yyyy-MM-dd"),
-                duracionServicio: servicio.duracion,
-                precio: servicio.precio,
-                totalPagado: servicio.precio,
-                clienteId: perfilCliente.id,
-                proveedorId: servicio.proveedorId,
-                servicioId: Number(servicio.id),
-                tituloServicio: servicio.titulo,
-                descripcionServicio: servicio.descripcion,
-                categoriaServicio: servicio.categoria,
-                modalidad: servicio.modalidad,
-                ubicacion: servicio.ubicacion,
-                politicaCancelacion: "Cancela con 24 horas de anticipación",
-                esPagada: true
-            }
-            console.log("RESERVA FINAL:", reservaInicial);
-            const response = await reservaService.crearReserva(reservaInicial);
-
-            if (!response.exito || !response.reservaDTO?.idReserva) {
-                alert(response.mensaje || "No se pudo crear la reserva");
-                return;
-            }
-            const codigoReserva = response.reservaDTO.idReserva;
-            try {
-                const idsArray = slotSeleccionado.idsSlots.split(",").map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-                await horariosService.reservarSlots({ idsSlots: idsArray, codigoReserva });
-                console.log("Slot RESERVADO");
-            } catch (error) {
-                console.error("No se pudo vincular la reserva con los slots:", error);
-            }
-            alert("Reserva realizada con éxito");
-            handleCloseModal();
-        } catch (error) {
-            console.error("Error al procesar la reserva", error);
-        }
+        handleCloseModal();
     }
 
     const resetModalState = useCallback(() => {

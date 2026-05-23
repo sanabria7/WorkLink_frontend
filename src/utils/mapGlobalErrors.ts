@@ -9,7 +9,7 @@ export function mapGlobalErrors(err: AxiosError<any> | any): string {
 
   switch (status) {
     case 401:
-      return data?.message || "Correo o contraseña incorrectos";
+      return data?.message || "Credenciales inválidas";
     case 403:
       return data?.message || "Acceso denegado";
     case 404:
