@@ -40,7 +40,7 @@ export default function MisServicios() {
   return (
     <div className="mis-servicios">
       <h1>Mis Servicios</h1>
-      <button onClick={() => navigate("/crear-servicio")}>
+      <button onClick={() => navigate("/crear-servicio")} style={{ backgroundColor: "#2563eb", color: "white", border: "none", borderRadius: "0.5rem", padding: "10px", cursor: "pointer", fontWeight: 600, transition: "background-color 0.3s ease, transform 0.2s ease" }}>
         <span>Crear Servicio</span>
       </button>
       <table className="servicios-table">

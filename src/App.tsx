@@ -25,6 +25,8 @@ import ConfigurarHorarios from './components/pages/configHorarios.tsx';
 import MisReservas from './routes/cliente/listaReservas.tsx';
 import ProveedorReviews from './routes/proveedor/reviews.tsx';
 import CheckoutPage from './routes/cliente/checkout.tsx';
+import MisPagosCliente from './routes/cliente/pagosCliente.tsx';
+import MisPagosProveedor from './routes/proveedor/pagosProv.tsx';
 
 const router = createBrowserRouter([
     {
@@ -53,6 +55,7 @@ const router = createBrowserRouter([
                             { path: "/home", element: <Home /> },
                             { path: "/mis-reservas", element: <MisReservas /> },
                             { path: "/checkout", element: <CheckoutPage /> },
+                            { path: "/mis-pagos", element: <MisPagosCliente /> }
                         ]
                     },
                     {
@@ -64,7 +67,8 @@ const router = createBrowserRouter([
                             { path: "/mis-servicios", element: <MisServicios /> },
                             { path: "/calendario", element: <Calendario /> },
                             { path: "/configurar-horarios", element: <ConfigurarHorarios /> },
-                            { path: "/reseñas-prov", element: <ProveedorReviews /> }
+                            { path: "/reseñas-prov", element: <ProveedorReviews /> },
+                            { path: "/gestion-pagos", element: <MisPagosProveedor /> }
                         ]
                     },
                 ]

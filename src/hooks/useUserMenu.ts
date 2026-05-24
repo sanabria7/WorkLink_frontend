@@ -28,7 +28,7 @@ export function useUserMenu(
         } else if (role === "proveedor") {
             return [
                 { label: "Crear servicio", action: () => navigate("/crear-servicio") },
-                { label: "Gestionar pagos", action: () => navigate("/gestionar-pagos") },
+                { label: "Gestionar pagos", action: () => navigate("/gestion-pagos") },
                 ...base,
             ];
         }
