@@ -1,13 +1,13 @@
 import api from "./axiosOffer";
-import type { Service } from "../types/serviceTypes";
+import type { busquedaServiceRequest, Service } from "../types/serviceTypes";
 
 export async function crearServicio(servicio: Service): Promise<Service> {
   const { data } = await api.post<Service>("/servicio/crear", servicio);
   return data;
 }
 
-export async function buscarServicio(query: string): Promise<Service[]> {
-  const { data } = await api.post<Service[]>("/servicio/busqueda", { query });
+export async function buscarServicio(consulta: busquedaServiceRequest): Promise<Service[]> {
+  const { data } = await api.post<Service[]>("/servicio/busqueda", consulta);
   return data;
 }
 

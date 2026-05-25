@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import type { Service } from "../types/serviceTypes";
+import type { busquedaServiceRequest, Service } from "../types/serviceTypes";
 import * as offerService from "../api/offerService";
 
 export function useService() {
@@ -23,15 +23,15 @@ export function useService() {
     }
   }, []);
 
-  const buscarServicio = useCallback(async (query: string) => {
-    if (!query || query.trim() === "") {
+  const buscarServicio = useCallback(async (busqueda: busquedaServiceRequest) => {
+    if (!busqueda.query || busqueda.query.trim() === "") {
       setLoading(false);
       return [];
     }
     setLoading(true);
     setError(null);
     try {
-      const resultados = await offerService.buscarServicio(query);
+      const resultados = await offerService.buscarServicio(busqueda);
       return resultados;
     } catch (err: any) {
       if (err.response && err.response.status === 404) return [];

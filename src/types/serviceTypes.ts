@@ -17,3 +17,8 @@ export interface Service {
 export interface profilesService extends Service {
     proveedor: ProfileProveedor;
 }
+export interface busquedaServiceRequest{
+    query : string;
+    categoria : String;
+    precio : number
+}

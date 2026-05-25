@@ -105,6 +105,7 @@ input[type="text"],
         border: 1px solid #eaeaea;
         border-radius: 999px;
         padding: 0.25rem 0.5rem;
+        position: relative;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 
         .btn-searchbar {
@@ -564,4 +565,50 @@ input[type="text"],
 
 .servicios-table button:hover {
   background-color: #005a9e;
+}
+
+/* estilos para los modales del searchBar */
+.searchBar_modal{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 30;
+  background-color: white;
+  position: absolute;
+  top: 100%;
+  margin-top: 8px;
+  border: 2px solid #eaeaea;
+  border-radius: 16px;
+  height: 250px;
+  width: 50%;
+
+}
+.searchBar_modal_center{
+  left: 25%;
+  
+}
+.searchBar_modal_right{
+  right: 0;
+}
+.categoria_btn{
+  padding: 4px 10px;
+  border-radius: 15px;
+  border: 1px solid #00000005;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.categoria_btn_education{
+  background-color: #e8f5ff;
+  color: #0186e4;
+}
+.categoria_btn_arte{
+  background-color: #f3e8ff;
+  color: #8200db;
+}
+.categoria_btn_evento{
+  background-color: #ffedd4;
+  color: #ca3500;
 }

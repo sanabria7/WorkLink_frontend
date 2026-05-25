@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import type { Service } from "../types/serviceTypes";
+import type { busquedaServiceRequest, Service } from "../types/serviceTypes";
 import { useService } from "../hooks/useService";
 
 export default function ResultadosBusqueda() {
@@ -9,10 +9,18 @@ export default function ResultadosBusqueda() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const palabra = params.get("palabra") ?? "";
+  const precio = (params.get("precio")) ?? "" ;
+  const categoria = params.get("service") ?? "";
 
   useEffect(() => {
     let mounted = true;
-    buscarServicio(palabra)
+    const busqueda: busquedaServiceRequest = {
+        query: palabra,
+        precio: precio === "" ? 0.0 : parseFloat(precio),
+        categoria: categoria === "" ? "TODOS" : categoria
+    }
+    console.log(busqueda)
+    buscarServicio(busqueda)
       .then((res) => mounted && setResultados(res))
       .catch((err) => {
         console.log("erro de mierda")
@@ -21,7 +29,7 @@ export default function ResultadosBusqueda() {
     return () => {
       mounted = false;
     };
-  }, [palabra, buscarServicio]);
+  }, [palabra, precio, categoria, buscarServicio]);
 
   return (
     <div style={{ padding: "1rem" }}>
