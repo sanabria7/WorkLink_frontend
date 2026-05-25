@@ -85,7 +85,7 @@ export default function NavRight() {
             </>
           ) : (
             <>
-              <li style={{ display: "flex", alignItems: "initial"}}>{perfilName}</li>
+              <li style={{ display: "flex", alignItems: "initial", fontSize:"0.75rem", fontWeight:"600"}}>{perfilName.toUpperCase()}</li>
               {menuItems.map((item) => (
                 <li key={item.label}>
                   <button onClick={() => { setMenuOpen(false); item.action(); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>

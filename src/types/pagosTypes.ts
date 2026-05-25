@@ -26,7 +26,7 @@ export interface PagoResponse {
     fechaPago?: string;
     estadoPago?: string;
     metodoPago?: string;
-    montoPago?: number;
+    monto?: number;
     tokenConfirmacion?: string;
 }
 
@@ -65,4 +65,17 @@ export interface PaymentSession {
     reserva: ReservaDTO;
     idsSlots: number[];
     createdAt: string;
+}
+
+export interface CuentaBancariaRequest {
+    titular: string;
+    numeroCuenta: string;
+    tipoCuenta: "AHORROS" | "CORRIENTE";
+    banco: string;
+    documento: string;
+}
+
+export interface CuentaBancariaResponse extends CuentaBancariaRequest {
+    cuentaVinculada: boolean;
+    cuentaVinculadaAt: string;
 }

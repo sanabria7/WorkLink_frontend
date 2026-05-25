@@ -77,7 +77,6 @@ export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps
                                     hoveredStar !== null
                                         ? star <= hoveredStar
                                         : star <= calificacion;
-
                                 return (
                                     <button
                                         key={star}

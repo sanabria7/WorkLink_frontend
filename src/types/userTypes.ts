@@ -40,12 +40,10 @@ export interface ProveedorDTO {
 
 export interface ProfileCliente extends ClienteDTO {
     usuario: ProfilesUser;
-    /* reviews?: Review[]; */
 }
 
 export interface ProfileProveedor extends ProveedorDTO {
     usuario: ProfilesUser;
-    /* reviews?: Review[]; */
 }
 
 export interface Review {

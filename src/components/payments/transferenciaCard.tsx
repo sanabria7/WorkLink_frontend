@@ -54,14 +54,14 @@ export default function TransferenciaCard({ transferencia, onMarcarTransferido }
                 </div>
             </div>
 
-            {puedeMarcar && onMarcarTransferido && (
+            {/* {puedeMarcar && onMarcarTransferido && (
                 <button
                     onClick={() => onMarcarTransferido(transferencia.id)}
                     style={{ marginTop: "1.25rem", width: "100%", padding: "1rem", backgroundColor: "#15803d", color: "white", border: "none", borderRadius: "14px", fontWeight: 600, fontSize: "1.05rem", cursor: "pointer"}}
                 >
                     Marcar como Transferido (Ya realicé el pago bancario)
                 </button>
-            )}
+            )} */}
 
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#6b7280", fontSize: "0.85rem" }}>
                 <Icon name="info" />

@@ -40,10 +40,12 @@ export default function Calendario() {
         try {
             const data = await horariosService.getAll(idProveedor);
             console.log("Horarios backend:", data);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
             const eventosMap: Evento[] = data.map((item: any) => {
                 const fechaBase = parseISO(item.fecha);
                 const start = parse(item.horaInicio, "HH:mm:ss", fechaBase);
-                const end = parse(item.horaFin, "HH:mm:ss", fechaBase);
+                const end = parse(item.horaFin, "HH:mm:ss", fechaBase); console.log(`Slot ${item.id} - Fecha: ${item.fecha} | Hora: ${item.horaInicio} - ${item.horaFin} | Estado: ${item.estado}`);
                 return {
                     id: item.id,
                     title: item.estado,
@@ -51,8 +53,13 @@ export default function Calendario() {
                     end,
                     estado: item.estado,
                     codigoReserva: item.codigoReserva
-                };
+                }; 
+            }).filter((evento: Evento) => {
+                const fechaEvento = new Date(evento.start);
+                fechaEvento.setHours(0, 0, 0, 0);
+                return fechaEvento >= hoy;
             });
+            console.log(`Total slots recibidos: ${eventosMap.length}`);
             setEvento(eventosMap);
         } catch (error) {
             console.error("Error cargando los horarios:", error);
@@ -111,7 +118,9 @@ export default function Calendario() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                 <h1 style={{ fontWeight: "bold" }}>Mi Calendario</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <button onClick={cargarHorarios} style={{ backgroundColor: "#2563eb", color: "white", border: "none", borderRadius: "0.5rem", padding: "10px", cursor: "pointer", fontWeight: 600, transition: "background-color 0.3s ease, transform 0.2s ease" }}>Actualizar calendario</button>
+                    <button onClick={cargarHorarios} style={{ display: "flex", alignItems: "center",backgroundColor: "#2563eb", color: "white", border: "none", borderRadius: "0.5rem", padding: "10px", cursor: "pointer", fontWeight: 600, transition: "background-color 0.3s ease, transform 0.2s ease" }}>
+                        <Icon name="refresh"/>Actualizar calendario
+                    </button>
                 </div>
             </div>
             {evento.length === 0 ? (
@@ -165,33 +174,20 @@ export default function Calendario() {
                         const slotDate = new Date(slotInfo.start);
                         slotDate.setHours(0, 0, 0, 0);
 
-                        if (slotDate < today) {
-                                return; // no hace nada
-                        }                        
-                        if (
-                            view === Views.MONTH &&
-                            slotInfo.slots.length === 1
-                        ) {
+                        if (slotDate < today) return; // bloquea los dias pasados
+
+                        if (view === Views.MONTH && slotInfo.slots.length === 1) {
                             setFecha(slotInfo.start);
                             setView(Views.DAY);
                             return;
                         }
-                        if (
-                            (view === Views.DAY || view === Views.WEEK)
-                            && slotInfo.start
-                            && slotInfo.end
-                        ) {
-                            setSelectedRango({
-                                start: slotInfo.start,
-                                end: slotInfo.end,
-                            });
+                        if ((view === Views.DAY || view === Views.WEEK) && slotInfo.start && slotInfo.end) {
+                            setSelectedRango({ start: slotInfo.start, end: slotInfo.end });
                         }
                     }}
                     onSelectEvent={(event) => {
                         const eventoSeleccionado = event as Evento;
-                        if (
-                            eventoSeleccionado.estado === "Reservado" && eventoSeleccionado.codigoReserva
-                        ) {
+                        if (eventoSeleccionado.estado === "Reservado" && eventoSeleccionado.codigoReserva) {
                             setSelectedReserva(eventoSeleccionado.codigoReserva);
                             return;
                         }
@@ -209,20 +205,18 @@ export default function Calendario() {
                     dayPropGetter={(date) => {
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
-
                         const current = new Date(date);
                         current.setHours(0, 0, 0, 0);
 
                         if (current < today) {
                             return {
                                 style: {
-                                    backgroundColor: "#f3f4f6", // gris claro
+                                    backgroundColor: "#f3f4f6",
                                     pointerEvents: "none",
 
                                 }
                             };
                         }
-
                         return {};
                     }}
                     style={{ height: 700 }}

@@ -15,6 +15,11 @@ function safeParse(raw: string | null): PaymentSession[] {
 
 export function loadPaymentSessions(): PaymentSession[] {
     if (typeof window === "undefined") return [];
+    const raw = window.localStorage.getItem(PAYMENT_HISTORY_KEY);
+    console.log("📥 LOCALSTORAGE RAW:", raw);
+    
+    const sessions = safeParse(raw);
+    console.log("📥 SESSIONS CARGADAS DEL LOCALSTORAGE:", sessions);
     return safeParse(window.localStorage.getItem(PAYMENT_HISTORY_KEY));
 }
 

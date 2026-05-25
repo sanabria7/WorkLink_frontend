@@ -10,7 +10,6 @@ export default function MisPagosCliente() {
     const { perfilCliente } = useAuth();
 
     const [sessions, setSessions] = useState<PaymentSession[]>([]);
-    const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
     useEffect(() => {
         setSessions(loadPaymentSessions());
@@ -19,15 +18,9 @@ export default function MisPagosCliente() {
     const totals = useMemo(() => {
         const total = sessions.length;
         const retenidos = sessions.filter((s) => (s.pago.estadoPago || "").toUpperCase() === "RETENIDO").length;
-        const montoTotal = sessions.reduce((acc, session) => acc + Number(session.pago.montoPago || 0), 0);
+        const montoTotal = sessions.reduce((acc, session) => acc + Number(session.pago.monto || 0), 0);
         return { total, retenidos, montoTotal };
     }, [sessions]);
-
-    async function handleCopy(token: string, key: string) {
-        await navigator.clipboard.writeText(token);
-        setCopiedKey(key);
-        window.setTimeout(() => setCopiedKey(null), 1500);
-    }
 
     if (!perfilCliente?.id) {
         return (
@@ -82,17 +75,6 @@ export default function MisPagosCliente() {
                         return (
                             <div key={key}>
                                 <PaymentSessionCard session={session} />
-                                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.75rem" }}>
-                                    {session.pago.tokenConfirmacion && (
-                                        <button
-                                            type="button"
-                                            onClick={() => handleCopy(session.pago.tokenConfirmacion!, key)}
-                                            style={{ border: "1px solid #d1d5db", backgroundColor: "white", borderRadius: "12px", padding: "0.75rem 1rem", cursor: "pointer", fontWeight: 600 }}
-                                        >
-                                            {copiedKey === key ? "Token copiado" : "Copiar token"}
-                                        </button>
-                                    )}
-                                </div>
                             </div>
                         );
                     })}

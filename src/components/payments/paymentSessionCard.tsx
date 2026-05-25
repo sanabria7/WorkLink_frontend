@@ -50,7 +50,7 @@ export default function PaymentSessionCard({ session }: Props) {
                 </div>
                 <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "0.9rem" }}>
                     <p style={{ margin: "0 0 0.25rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Monto</p>
-                    <p style={{ margin: 0, fontWeight: 700 }}>${Number(session.pago.montoPago || 0).toLocaleString("es-CO")}</p>
+                    <p style={{ margin: 0, fontWeight: 700 }}>${Number(session.pago.monto || 0).toLocaleString("es-CO")}</p>
                 </div>
             </div>
 

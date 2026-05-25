@@ -92,14 +92,6 @@ export default function EditPerfilProveedor() {
           onChange={(evento) => handleFieldChange("biografia", evento.target.value)}
           disabled={saving}
         />
-        <label htmlFor="proveedor-horarioDisponibilidad">Horario de Disponibilidad:</label>
-        <input
-          id="proveedor-horarioDisponibilidad"
-          type="text"
-          value={proveedor.horarioDisponibilidad ?? ""}
-          onChange={(evento) => handleFieldChange("horarioDisponibilidad", evento.target.value)}
-          disabled={saving}
-        />
       </fieldset>
       <button type="submit" disabled={saving} aria-busy={saving}>
         {saving ? "Guardando..." : "Guardar cambios"}

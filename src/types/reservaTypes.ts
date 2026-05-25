@@ -1,5 +1,5 @@
-import type { profilesService, Service } from "./serviceTypes";
-import type { ClienteDTO, ProfileCliente, ProfileProveedor, ProveedorDTO } from "./userTypes";
+import type { profilesService } from "./serviceTypes";
+import type { ProfileCliente, ProfileProveedor} from "./userTypes";
 
 export type estadoReserva = "EN_CURSO" | "CANCELADA" | "COMPLETADA";
 

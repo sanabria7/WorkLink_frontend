@@ -6,10 +6,11 @@ import PerfilUsuario from "./perfilGeneralUsuario";
 import { isAxiosError } from "axios";
 import { mapValidationErrors } from "../../utils/mapValidationErrors";
 import { mapGlobalErrors } from "../../utils/mapGlobalErrors";
+import Icon from "../misc/icon";
 
 export default function EditPerfilCliente() {
   const { user } = useAuth();
-  const { cliente, rolActivo, setCliente, saveCliente, loading, saving, error } = useProfile(user);
+  const { cliente, rolActivo, setCliente, saveCliente, loading, saving } = useProfile(user);
   const [errorResponse, setErrorResponse] = useState<Record<string, string>>({});
 
   if (loading) return <p>Cargando perfil...</p>;
@@ -46,7 +47,6 @@ export default function EditPerfilCliente() {
     [setCliente]
   );
 
-  // Guardar cambios en BD
   async function handleSubmit(evento: React.SubmitEvent<HTMLFormElement>) {
     evento.preventDefault();
     if (!cliente) return;
@@ -71,9 +71,10 @@ export default function EditPerfilCliente() {
   return (
     <form className="edit-form" onSubmit={handleSubmit} aria-label="Editar perfil" aria-describedby="editPerfil-error">
       <h1>Editar perfil {user?.rol}</h1>
-      {errorResponse && (
+      {errorResponse.general && (
         <div id="editPerfil-error" role="alert" className="errorMessage">
-          Error cargando perfil: {String(errorResponse)}
+          <Icon name="error"/>
+          {errorResponse.general}
         </div>
       )}
       <PerfilUsuario

@@ -27,6 +27,7 @@ import ProveedorReviews from './routes/proveedor/reviews.tsx';
 import CheckoutPage from './routes/cliente/checkout.tsx';
 import MisPagosCliente from './routes/cliente/pagosCliente.tsx';
 import MisPagosProveedor from './routes/proveedor/pagosProv.tsx';
+import ConfigurarCuentaBancaria from './components/pages/configCuentaBancaria.tsx';
 
 const router = createBrowserRouter([
     {
@@ -68,7 +69,8 @@ const router = createBrowserRouter([
                             { path: "/calendario", element: <Calendario /> },
                             { path: "/configurar-horarios", element: <ConfigurarHorarios /> },
                             { path: "/reseñas-prov", element: <ProveedorReviews /> },
-                            { path: "/gestion-pagos", element: <MisPagosProveedor /> }
+                            { path: "/gestion-pagos", element: <MisPagosProveedor /> },
+                            { path: "/configurar-cuenta-bancaria", element: <ConfigurarCuentaBancaria /> }
                         ]
                     },
                 ]

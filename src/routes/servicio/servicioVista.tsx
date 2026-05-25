@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { profilesService } from "../../types/serviceTypes";
 import { getServicioById } from "../../api/offerService";
 import { getByIdPerfilProveedor } from "../../api/profilesService";
-import ReservaModal from "../../components/modals/reservaModal";
+import ReservaModal from "../../components/modals/reservaModal/reservaModal";
 import ServiceReviews from "../../components/reviews/serviceReviews";
 import { getReviewsByServicio } from "../../api/reviewService";
 import type { Review } from "../../types/userTypes";

@@ -1,7 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import Icon from "../misc/icon";
 import ReservaInfoCard from "./reservaInfoCard";
-import { useReservaDetalle } from "../../hooks/useReservaModal";
+import { useReservaDetalle } from "../../hooks/useInfoReservaCalendario";
 import { formatFecha, formatRangoHora } from "../../utils/formatFechas";
 
 interface Props {
