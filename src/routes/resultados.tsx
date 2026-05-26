@@ -46,7 +46,7 @@ export default function ResultadosBusqueda() {
               <strong style={{color:"black"}}>{resultados.length}</strong> resultados encontrados para <em><strong style={{color:"black"}}>"{palabra}"</strong></em>
             </p>
           )}
-          <section aria-label="Resultados de servicios" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(1fr))", gap: "1rem", marginTop: "1rem", }}>
+          <section className="container-results" aria-label="Resultados de servicios" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, 360px)", gap: "1rem", rowGap: "2rem", marginTop: "1rem", }}>
             {resultados.map((servicio) => (
               <article
                 key={servicio.id}

@@ -701,7 +701,10 @@
   	font-family: Inter;
 	transition: transform 0.6s ease-in-out;
 }
-.container-Educacion .text{
+/* .container-results{
+	color: #0186e4;
+} */
+.container-Educacion .text, .container-results .text{
 	background-color: #e8f5ff;
 }
 .servicecard {
