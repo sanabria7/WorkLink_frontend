@@ -12,7 +12,7 @@ interface ReviewsModalProps {
 
 export default function ReviewsModal({ open, onClose, reviews, }: ReviewsModalProps) {
     return (
-        <Dialog open={open} onClose={onClose} style={{ position: "fixed", inset: 0, zIndex: 100 }}>
+        <Dialog open={open} onClose={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
             <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", padding: "24px", backgroundColor: "rgba(0,0,0,0.7)" }}>
                 <DialogPanel style={{ backgroundColor: "white", width: "100%", maxWidth: "1100px", maxHeight: "90vh", borderRadius: "32px", border: "1px solid #e5e7eb", overflow: "hidden", display: "flex", flexDirection: "column" }}>
                     {/* Header */}

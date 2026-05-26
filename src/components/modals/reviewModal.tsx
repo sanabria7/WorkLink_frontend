@@ -54,7 +54,7 @@ export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps
     }
 
     return (
-        <Dialog open={open} onClose={handleClose} style={{ position: "fixed", inset: 0, zIndex: 100 }}>
+        <Dialog open={open} onClose={handleClose} style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
             <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.7)" }}>
                 <div style={{ backgroundColor: "white", width: "100%", maxWidth: "500px", borderRadius: "24px", padding: "24px" }}>
                     <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "20px", marginTop: "0px" }}>

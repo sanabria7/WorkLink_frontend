@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../auth/authProvider";
-import type { EstadisticasType } from "../types/EstadisticasTypes";
-import { getEstadisticasReservas } from "../api/EstadisticasService";
-import  "../styles/estadisticas.css"
+import { useAuth } from "../../auth/authProvider";
+import type { EstadisticasType } from "../../types/EstadisticasTypes";
+import { getEstadisticasReservas } from "../../api/EstadisticasService";
+import  "../../styles/estadisticas.css"
 import CustomActivePieChart from "./PieChartActive";
 
 export default function Estadisticas(){

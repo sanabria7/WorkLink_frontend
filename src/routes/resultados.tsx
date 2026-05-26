@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import type { busquedaServiceRequest, Service } from "../types/serviceTypes";
 import { useService } from "../hooks/useService";
+import ServiceCard from "../components/landing/ServiceCard";
 
 export default function ResultadosBusqueda() {
   const { buscarServicio, loading } = useService();
@@ -9,15 +10,15 @@ export default function ResultadosBusqueda() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const palabra = params.get("palabra") ?? "";
-  const precio = (params.get("precio")) ?? "" ;
+  const precio = (params.get("precio")) ?? "";
   const categoria = params.get("service") ?? "";
 
   useEffect(() => {
     let mounted = true;
     const busqueda: busquedaServiceRequest = {
-        query: palabra,
-        precio: precio === "" ? 0.0 : parseFloat(precio),
-        categoria: categoria === "" ? "TODOS" : categoria
+      query: palabra,
+      precio: precio === "" ? 0.0 : parseFloat(precio),
+      categoria: categoria === "" ? "TODOS" : categoria
     }
     console.log(busqueda)
     buscarServicio(busqueda)
@@ -32,65 +33,32 @@ export default function ResultadosBusqueda() {
   }, [palabra, precio, categoria, buscarServicio]);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "1rem", marginInline:"4rem" }}>
       <h1>Resultados de búsqueda</h1>
       {loading ? (
         <p>Buscando servicios…</p>
-      ) : resultados.length === 0  ? (
+      ) : resultados.length === 0 ? (
         <p>No se encontraron servicios{palabra ? ` para "${palabra}"` : ""}.</p>
       ) : (
-      <>
-        {resultados.length > 0 && palabra && (
-          <p>
-            <strong>{resultados.length}</strong> resultados encontrados para <em>"{palabra}"</em>
-          </p>
-        )}
-        <section
-          aria-label="Resultados de servicios"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-            gap: "1rem",
-            marginTop: "1rem",
-          }}
-        >
-          {resultados.map((servicio) => (
-            <article
-              key={servicio.id}
-              style={{
-                border: "1px solid #e6e6e6",
-                borderRadius: 8,
-                overflow: "hidden",
-                background: "#fff",
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-              }}
-            >
-              <Link to={`/servicio/${servicio.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <div style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden" }}>
-                  <img
-                    src={/* servicio.imgUrl */ "https://images.unsplash.com/photo-1532272278764-53cd1fe53f72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaG90b2dyYXBoeSUyMHBvcnRyYWl0JTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc3MzYxNjQ5Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"}
-                    alt={servicio.titulo}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  />
-                </div>
-                <div style={{ padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <h2 style={{ fontSize: "1rem", margin: 0 }}>{servicio.titulo}</h2>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontWeight: 600 }}>
-                      ${servicio.precio}
-                    </span>
-                    <span aria-label={`Valoración $/* {servicio.rating} */ de 5`} title={`$/* {servicio.rating} */ / 5`}> {/* cuando camilo agregue rating */}
-                      ⭐ {/* servicio.rating */ 4.5}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </article>
-          ))}
-        </section>
-      </>
+        <>
+          {resultados.length > 0 && palabra && (
+            <p style={{fontSize:"0.9rem", color:"#505661"}}>
+              <strong style={{color:"black"}}>{resultados.length}</strong> resultados encontrados para <em><strong style={{color:"black"}}>"{palabra}"</strong></em>
+            </p>
+          )}
+          <section aria-label="Resultados de servicios" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(1fr))", gap: "1rem", marginTop: "1rem", }}>
+            {resultados.map((servicio) => (
+              <article
+                key={servicio.id}
+                style={{ border: "none", overflow: "hidden", background: "#fff", display: "flex", flexDirection: "row", height: "100%", width:"fit-content", gap:"10px", flexWrap:"wrap" }}
+              >
+                <Link to={`/servicio/${servicio.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <ServiceCard servicio={servicio} />
+                </Link>
+              </article>
+            ))}
+          </section>
+        </>
       )}
     </div>
   );

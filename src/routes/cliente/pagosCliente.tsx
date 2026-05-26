@@ -1,37 +1,37 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/authProvider";
+import * as pagosService from "../../api/pagosService";
 import PaymentSessionCard from "../../components/payments/paymentSessionCard";
-import { loadPaymentSessions } from "../../utils/paymentStorage";
-import type { PaymentSession } from "../../types/pagosTypes";
+import { Dialog } from "@headlessui/react";
+import Icon from "../../components/misc/icon";
+import type { PagoResponse } from "../../types/pagosTypes";
 
 export default function MisPagosCliente() {
     const navigate = useNavigate();
     const { perfilCliente } = useAuth();
+    const [pagos, setPagos] = useState<PagoResponse[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedPago, setSelectedPago] = useState<PagoResponse | null>(null);
 
-    const [sessions, setSessions] = useState<PaymentSession[]>([]);
+    const cargarPagos = async () => {
+        if (!perfilCliente?.id) return;
+        setLoading(true);
+        try {
+            const data = await pagosService.obtenerPagosPorCliente(perfilCliente?.id);
+            setPagos(data);
+        } catch (error) {
+            console.error("Error cargando pagos de cliente:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        setSessions(loadPaymentSessions());
-    }, []);
+        cargarPagos();
+    }, [perfilCliente?.id]);
 
-    const totals = useMemo(() => {
-        const total = sessions.length;
-        const retenidos = sessions.filter((s) => (s.pago.estadoPago || "").toUpperCase() === "RETENIDO").length;
-        const montoTotal = sessions.reduce((acc, session) => acc + Number(session.pago.monto || 0), 0);
-        return { total, retenidos, montoTotal };
-    }, [sessions]);
-
-    if (!perfilCliente?.id) {
-        return (
-            <div style={{ padding: "2rem", maxWidth: "1100px", margin: "0 auto" }}>
-                <div style={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "24px", padding: "2rem" }}>
-                    <h1 style={{ margin: 0, fontSize: "1.8rem", fontWeight: 800 }}>Mis pagos</h1>
-                    <p style={{ color: "#6b7280" }}>No se pudo identificar tu perfil de cliente.</p>
-                </div>
-            </div>
-        );
-    }
+    if (loading) { return <div style={{ padding: "2rem", textAlign: "center" }}>Cargando tus pagos...</div> }
 
     return (
         <div style={{ padding: "2rem", maxWidth: "1240px", margin: "0 auto" }}>
@@ -45,41 +45,67 @@ export default function MisPagosCliente() {
                 </button>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "1rem", marginBottom: "1.25rem" }}>
-                <div style={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "24px", padding: "1rem" }}>
-                    <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>Pagos guardados</p>
-                    <strong style={{ fontSize: "1.7rem" }}>{totals.total}</strong>
-                </div>
-                <div style={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "24px", padding: "1rem" }}>
-                    <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>Pagos retenidos</p>
-                    <strong style={{ fontSize: "1.7rem" }}>{totals.retenidos}</strong>
-                </div>
-                <div style={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "24px", padding: "1rem" }}>
-                    <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>Monto total</p>
-                    <strong style={{ fontSize: "1.7rem" }}>${totals.montoTotal.toLocaleString("es-CO")}</strong>
-                </div>
-            </div>
-
-            {sessions.length === 0 ? (
-                <div style={{ backgroundColor: "white", borderRadius: "24px", border: "1px dashed #d1d5db", padding: "3rem", textAlign: "center" }}>
-                    <h2 style={{ marginTop: 0 }}>Todavía no tienes pagos guardados</h2>
-                    <p style={{ color: "#6b7280" }}>Cuando completes una reserva con pago retenido, aparecerá aquí el resumen con su token de confirmación.</p>
-                    <button onClick={() => navigate("/home")} style={{ border: "none", backgroundColor: "#2563eb", color: "white", borderRadius: "12px", padding: "0.9rem 1.2rem", cursor: "pointer", fontWeight: 600 }}>
-                        Ir a buscar servicios
-                    </button>
+            {pagos.length === 0 ? (
+                <div style={{ backgroundColor: "white", borderRadius: "24px", padding: "5rem 2rem", textAlign: "center", border: "1px dashed #e5e7eb" }}>
+                    <svg style={{ fontSize: "4rem", opacity: 0.4 }}><Icon name="info" /></svg>
+                    <h2 style={{ marginTop: "1.5rem" }}>Aún no tienes pagos</h2>
+                    <p style={{ color: "#6b7280", maxWidth: "420px", margin: "1rem auto 0" }}>Cuando completes una reserva aparecerá aquí.</p>
                 </div>
             ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {sessions.map((session) => {
-                        const key = session.pago.pagoID || session.pago.tokenConfirmacion || session.createdAt;
-                        return (
-                            <div key={key}>
-                                <PaymentSessionCard session={session} />
-                            </div>
-                        );
-                    })}
+                <div style={{ backgroundColor: "white", borderRadius: "20px", overflow: "hidden", border: "1px solid #e5e7eb" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead>
+                            <tr style={{ backgroundColor: "#f9fafb", borderBottom: "2px solid #e5e7eb" }}>
+                                <th style={{ padding: "1.25rem 1rem", textAlign: "left", fontSize: "0.9rem", color: "#6b7280", fontWeight: 600 }}>SERVICIO</th>
+                                {/* <th style={{ padding: "1.25rem 1rem", textAlign: "left", fontSize: "0.9rem", color: "#6b7280", fontWeight: 600 }}>FECHA</th> */}
+                                <th style={{ padding: "1.25rem 1rem", textAlign: "left", fontSize: "0.9rem", color: "#6b7280", fontWeight: 600 }}>MONTO</th>
+                                <th style={{ padding: "1.25rem 1rem", textAlign: "left", fontSize: "0.9rem", color: "#6b7280", fontWeight: 600 }}>ESTADO</th>
+                                <th style={{ padding: "1.25rem 1rem", textAlign: "center", fontSize: "0.9rem", color: "#6b7280", fontWeight: 600 }}>ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {pagos.map((pago) => (
+                                <tr key={pago.pagoID} style={{ borderTop: "1px solid #f3f4f6", transition: "background-color 0.2s" }} className="hover:bg-gray-50">
+                                    <td style={{ padding: "1.25rem 1rem", fontWeight: 600 }}>Servicio #{pago.servicioID}</td>
+                                    {/* <td style={{ padding: "1.25rem 1rem" }}>{pago.fechaPago ? new Date(pago.fechaPago).toLocaleDateString("es-CO") : "-"}</td> */}
+                                    <td style={{ padding: "1.25rem 1rem", fontWeight: 700 }}>${Number(pago.monto || 0).toLocaleString("es-CO")}</td>
+                                    <td style={{ padding: "1.25rem 1rem" }}>
+                                        <span style={{
+                                            padding: "6px 16px",
+                                            borderRadius: "999px",
+                                            fontSize: "0.85rem",
+                                            fontWeight: 600,
+                                            backgroundColor: pago.estadoPago === "RETENIDO" ? "#fef3c7" : pago.estadoPago === "EXITOSO" ? "#dcfce7" : "#f3e8ff",
+                                            color: pago.estadoPago === "RETENIDO" ? "#92400e" : pago.estadoPago === "EXITOSO" ? "#15803d" : "#6b21a8"
+                                        }}>
+                                            {pago.estadoPago}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: "1.25rem 1rem", textAlign: "center" }}>
+                                        <button
+                                            onClick={() => setSelectedPago(pago)}
+                                            style={{ color: "#2563eb", fontWeight: 600, textDecoration: "underline", background: "none", border: "none", cursor: "pointer" }}
+                                        >
+                                            Ver detalle
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
+
+            <Dialog open={!!selectedPago} onClose={() => setSelectedPago(null)} style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
+                <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0.75)", padding: "20px" }}>
+                    <div style={{ backgroundColor: "white", width: "100%", maxWidth: "720px", borderRadius: "24px", overflow: "hidden" }}>
+                        {selectedPago && <PaymentSessionCard session={{ pago: selectedPago }} />}
+                        <div style={{ padding: "1.25rem", textAlign: "center", borderTop: "1px solid #e5e7eb" }}>
+                            <button onClick={() => setSelectedPago(null)} style={{ padding: "8px", borderRadius: "12px", width:"100%", fontWeight:600,fontSize: "0.9rem", border: "1px solid #d1d5db", cursor: "pointer" }}>Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
         </div>
     );
 }

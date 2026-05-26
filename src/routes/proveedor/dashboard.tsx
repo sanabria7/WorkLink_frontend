@@ -1,4 +1,4 @@
-import Estadisticas from "../../estadisticas/EstadisticasDashboard";
+import Estadisticas from "../../components/estadisticas/EstadisticasDashboard";
 
 export default function Dashboard() {
     return (

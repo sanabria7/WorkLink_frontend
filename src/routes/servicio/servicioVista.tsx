@@ -32,7 +32,7 @@ export default function Servicio() {
     return (
         <div style={{ backgroundColor: "", display: "flex", justifyContent: "center", marginTop: "1rem", marginInline: "15%" }}>
             {/* Columna perfil-reserva */}
-            <section style={{ backgroundColor: "", display: "flex", marginLeft: "2rem", flexDirection: "column", maxWidth: "30rem", minWidth: "30rem", gap: "2rem" }}>
+            <section style={{ backgroundColor: "", display: "flex", marginLeft: "2rem", flexDirection: "column", maxWidth: "30rem", minWidth: "30rem", gap: "2rem", marginTop:"12px" }}>
                 {/* Perfil del proveedor */}
                 <div style={{ backgroundColor: "", padding: "2rem", display: "flex", flexDirection: "column", gap: "10px", border: "1px solid #eaeaea", borderRadius: "8px", boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)" }}>
                     <div style={{ borderRadius: "1rem", height: "150px", overflow: "hidden" }}>
@@ -102,7 +102,7 @@ export default function Servicio() {
                 </div>
             </section>
             {/* Columna Detalles del servicio */}
-            <section style={{ backgroundColor: "", width: "80%", display: "flex", marginInline: "4rem", flexDirection: "column", maxWidth: "60rem", gap: "2rem" }}>
+            <section style={{ backgroundColor: "", width: "80%", display: "flex", marginInline: "4rem", flexDirection: "column", maxWidth: "60rem", gap: "2rem", marginTop:"12px"}}>
                 <div style={{ display: "flex", flexDirection: "column", width: "100%", backgroundColor: "" }}>
                     <h4 style={{ backgroundColor: "", marginTop: "0px", marginBottom: "8px", color: "#0077ff", fontSize: "1rem" }}>
                         {servicio.categoria}

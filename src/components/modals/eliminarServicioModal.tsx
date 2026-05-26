@@ -10,7 +10,7 @@ interface Props {
 
 export default function EliminarServicio({ servicio, onClose, onConfirm }: Props) {
     return (
-        <Dialog open={!!servicio} onClose={onClose} style={{ position: "fixed", inset: 0, zIndex: 60 }}>
+        <Dialog open={!!servicio} onClose={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "rgba(0,0,0,0.6)" }}>
                 <div style={{ width: "100%", maxWidth: "500px", backgroundColor: "white", borderRadius: "24px", padding: "2rem" }}>
                     <h2 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "1rem" }}>

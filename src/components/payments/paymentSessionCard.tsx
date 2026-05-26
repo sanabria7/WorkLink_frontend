@@ -9,51 +9,54 @@ interface Props {
 
 export default function PaymentSessionCard({ session }: Props) {
     const [copied, setCopied] = useState(false);
-
-    const token = session.pago.tokenConfirmacion || "SIN TOKEN";
-    const serviceTitle = session.servicio?.titulo || `Servicio #${session.pago.servicioID ?? "-"}`;
-    const providerName = session.servicio?.proveedor?.usuario
-        ? `${session.servicio.proveedor.usuario.nombre} ${session.servicio.proveedor.usuario.apellido}`
-        : `Proveedor #${session.pago.proveedorID ?? "-"}`;
+    const pago = session.pago;
+    const monto = Number(pago.monto || 0)
+    const token = pago.tokenConfirmacion || "SIN TOKEN";
+    const serviceTitle = `Servicio #${pago.servicioID || "-"}`;
+    const providerName = `Proveedor #${pago.proveedorID || "-"}`
     const reservaId = session.reserva?.idReserva || "Sin reserva asociada";
+    const fecha = pago.fechaPago ? new Date(pago.fechaPago).toLocaleString("es-CO") : session.createdAt;
 
     async function handleCopy() {
-        if (!session.pago.tokenConfirmacion) return;
-        await navigator.clipboard.writeText(session.pago.tokenConfirmacion);
+        if (!pago.tokenConfirmacion) return;
+        await navigator.clipboard.writeText(pago.tokenConfirmacion);
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1600);
     }
 
     return (
-        <article style={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "28px", padding: "1.25rem", boxShadow: "0 8px 24px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <article style={{ backgroundColor: "white", border: "1px solid #e5e7eb", padding: "1.25rem", boxShadow: "0 8px 24px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "flex-start", flexWrap: "wrap" }}>
                 <div>
                     <p style={{ margin: "0 0 0.35rem 0", fontSize: "0.9rem", color: "#6b7280" }}>Servicio</p>
                     <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800 }}>{serviceTitle}</h3>
                     <p style={{ margin: "0.35rem 0 0 0", color: "#6b7280" }}>{providerName}</p>
                 </div>
-                <PaymentStatusBadge status={session.pago.estadoPago} />
+                <PaymentStatusBadge status={pago.estadoPago} />
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "0.9rem" }}>
-                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "0.9rem" }}>
-                    <p style={{ margin: "0 0 0.25rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Pago</p>
-                    <p style={{ margin: 0, fontWeight: 700 }}>{session.pago.pagoID || "Pendiente de ID"}</p>
+	    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "1rem" }}>
+                    <p style={{ margin: "0 0 0.35rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Monto Pagado</p>
+                    <p style={{ margin: 0, fontSize: "1.35rem", fontWeight: 700 }}>${monto.toLocaleString("es-CO")}</p>
                 </div>
-                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "0.9rem" }}>
-                    <p style={{ margin: "0 0 0.25rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Reserva</p>
-                    <p style={{ margin: 0, fontWeight: 700 }}>{reservaId}</p>
+
+                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "1rem" }}>
+                    <p style={{ margin: "0 0 0.35rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Referencia</p>
+                    <p style={{ margin: 0, fontWeight: 600, fontFamily: "monospace" }}>{reservaId}</p>
                 </div>
-                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "0.9rem" }}>
-                    <p style={{ margin: "0 0 0.25rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Método</p>
-                    <p style={{ margin: 0, fontWeight: 700 }}>{session.pago.metodoPago || "-"}</p>
+
+                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "1rem" }}>
+                    <p style={{ margin: "0 0 0.35rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Método</p>
+                    <p style={{ margin: 0, fontWeight: 600 }}>{pago.metodoPago}</p>
                 </div>
-                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "0.9rem" }}>
-                    <p style={{ margin: "0 0 0.25rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Monto</p>
-                    <p style={{ margin: 0, fontWeight: 700 }}>${Number(session.pago.monto || 0).toLocaleString("es-CO")}</p>
+
+                <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "18px", padding: "1rem" }}>
+                    <p style={{ margin: "0 0 0.35rem 0", color: "#6b7280", fontSize: "0.85rem" }}>Fecha</p>
+                    <p style={{ margin: 0, fontWeight: 600 }}>{fecha}</p>
                 </div>
             </div>
-
+	    
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", backgroundColor: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "20px", padding: "1rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
                     <div>
@@ -63,8 +66,8 @@ export default function PaymentSessionCard({ session }: Props) {
                     <button
                         type="button"
                         onClick={handleCopy}
-                        disabled={!session.pago.tokenConfirmacion}
-                        style={{ border: "none", backgroundColor: session.pago.tokenConfirmacion ? "#2563eb" : "#93c5fd", color: "white", borderRadius: "12px", padding: "0.8rem 1rem", fontWeight: 700, cursor: session.pago.tokenConfirmacion ? "pointer" : "not-allowed" }}
+                        disabled={!pago.tokenConfirmacion}
+                        style={{ border: "none", backgroundColor: pago.tokenConfirmacion ? "#2563eb" : "#93c5fd", color: "white", borderRadius: "12px", padding: "0.8rem 1rem", fontWeight: 700, cursor: pago.tokenConfirmacion ? "pointer" : "not-allowed" }}
                     >
                         {copied ? "Copiado" : "Copiar token"}
                     </button>
@@ -75,10 +78,10 @@ export default function PaymentSessionCard({ session }: Props) {
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", color: "#6b7280", fontSize: "0.9rem" }}>
-                <span>Cliente ID: {session.pago.clienteID ?? "-"}</span>
-                <span>Proveedor ID: {session.pago.proveedorID ?? "-"}</span>
-                <span>Servicio ID: {session.pago.servicioID ?? "-"}</span>
-                <span>Fecha: {session.pago.fechaPago ? new Date(session.pago.fechaPago).toLocaleString("es-CO") : session.createdAt}</span>
+                <span>Cliente ID: {pago.clienteID ?? "-"}</span>
+                <span>Proveedor ID: {pago.proveedorID ?? "-"}</span>
+                <span>Servicio ID: {pago.servicioID ?? "-"}</span>
+                <span>Fecha: {fecha}</span>
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", color: "#6b7280", fontSize: "0.9rem" }}>

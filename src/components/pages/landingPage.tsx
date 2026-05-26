@@ -1,4 +1,5 @@
 import "../../styles/landing.css"
+import "../../App.css"
 import Imagen1 from "../../assets/landing-imagen/Img-1.png"
 import ImgCardEducation from "../../assets/landing-imagen/Card-education.png"
 import ImgCardArte from "../../assets/landing-imagen/Card-arte.png"

@@ -15,6 +15,10 @@ export default function SearchBar() {
 
     async function handleSearch(evento: React.SubmitEvent<HTMLFormElement>) {
         evento.preventDefault();
+        if (!palabra && !service && !precio) {
+            alert("¡Ups! Debes ingresar por lo menos un párametro de búsqueda."); 
+            return;
+        }
         const query = new URLSearchParams({palabra, precio, service}).toString();
         navigate(`/busqueda?${query}`);
         setOpenModal(null);
@@ -32,17 +36,17 @@ export default function SearchBar() {
                 <span>{precio && `$ ${precio}` || "Agregar precio"}</span>
             </div>
             <button type="submit" className="btn-primary" datatype="submit" aria-label="Buscar">
-                <span><Icon name="search"></Icon></span>
+                <span style={{display:"flex"}}><Icon name="search"></Icon></span>
             </button>
             {/* Modales */}
             {openModal === "palabra" && (
-                <SbKeyModal value={palabra} onChange={setPalabra} onClose={()=>setOpenModal(null)}/>
+                <SbKeyModal open={true} value={palabra} onChange={setPalabra} onClose={()=>setOpenModal(null)}/>
             )}
             {openModal === "precio" && (
-                <SbPriceModal value={precio} onChange={setPrecio} onClose={()=>setOpenModal(null)}/>
+                <SbPriceModal open={true} value={precio} onChange={setPrecio} onClose={()=>setOpenModal(null)}/>
             )}
             {openModal === "service" && (
-                <SbServiceModal  onChange={setService} onClose={()=>setOpenModal(null)}/>
+                <SbServiceModal open={true} onChange={setService} onClose={()=>setOpenModal(null)}/>
             )}
         </form>
     );

@@ -10,7 +10,7 @@ interface Props {
 export default function TransferenciaCard({ transferencia, onMarcarTransferido }: Props) {
     const puedeMarcar = transferencia.estado === "PENDIENTE";
     return (
-        <article style={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "28px", padding: "1.25rem", boxShadow: "0 8px 24px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <article style={{ backgroundColor: "white", border: "1px solid #e5e7eb", padding: "1.25rem", boxShadow: "0 8px 24px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "flex-start", flexWrap: "wrap" }}>
                 <div>
                     <p style={{ margin: "0 0 0.35rem 0", color: "#6b7280", fontSize: "0.9rem" }}>Pago</p>

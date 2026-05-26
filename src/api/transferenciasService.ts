@@ -16,3 +16,8 @@ export async function confirmarPagoConToken(token: string, prestadorID: number):
     });
     return data;
 }
+
+export async function obtenerTransferenciasPorProveedor(id:string): Promise<TransferenciaResponse[]> {
+    const { data } = await api.get(`/transferencias/proveedor/${id}`);
+    return data;
+}

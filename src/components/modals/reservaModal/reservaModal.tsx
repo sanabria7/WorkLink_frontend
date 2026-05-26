@@ -37,7 +37,7 @@ export default function ReservaModal({ open, onClose, servicio }: ReservaModalPr
     } = useReservaModal({ open, onClose, servicio, });
 
     return (
-        <Dialog open={open} onClose={handleCloseModal} style={{ position: "fixed", inset: 0, zIndex: 50 }}>
+        <Dialog open={open} onClose={handleCloseModal} style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
             <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(15, 23, 42, 0.72)", backdropFilter: "blur(4px)" }} />
             <div style={{ position: "fixed", inset: 0, display: "grid", placeItems: "center", padding: "16px" }}>
                 <div style={{ width: "min(1120px, 100%)", maxHeight: "92vh", overflow: "hidden", backgroundColor: "#ffffff", borderRadius: "24px", boxShadow: "0 25px 50px -12px rgba(15,23,42,0.25)", display: "flex", flexDirection: "column" }}>

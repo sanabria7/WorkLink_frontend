@@ -62,10 +62,20 @@ input[type="text"],
   margin: 5px 0 10px 0;
 }
 
+main {
+  padding-top: 75px;
+}
+
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
   background-color: #fdfdfd;
   border-bottom: 1px solid #eaeaea;
   padding: 0.5rem 1rem;
+  z-index: 1000;
 
   .navbar {
     display: flex;
@@ -111,22 +121,25 @@ input[type="text"],
           background: transparent;
           border: none;
           cursor: pointer;
-          font-size: 0.95rem;
+          font-size: 0.8rem;
           color: #333;
           border-radius: 999px;
           transition: background-color 0.2s ease;
           display: flex;
           align-items: center;
           justify-content: center;
-          text-align: center;
+          text-align: left;
+          padding-inline: 4px;
 
           span {
-            font-weight: 500;
+            font-weight: 600;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           &:hover {
-            background-color: #f9f9f9;
+            background-color: #ebe5e5;
           }
         }
 
@@ -262,6 +275,7 @@ input[type="text"],
           .dropdown__button {
             background-color: inherit;
             color: #dc2626;
+
             &:hover {
               background-color: #dc2626;
               color: #ffffff;
@@ -649,57 +663,71 @@ textarea {
 }
 
 /* estilos para los modales del searchBar */
-.searchBar_modal{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  z-index: 30;
-  background-color: white;
-  position: absolute;
-  top: 100%;
-  margin-top: 8px;
-  border: 2px solid #eaeaea;
-  border-radius: 16px;
-  height: 250px;
-  width: 50%;
-
-  .input-modal{
-    height: 30px;
-    width: 80%;
-    border-radius: 8px;
-  }
-  .input-modal:focus{
-    outline: none;
-    border: 2px solid #60b5ff;
-  }
-
-}
-.searchBar_modal_center{
-  left: 25%;
-  
-}
-.searchBar_modal_right{
-  right: 0;
-}
-.categoria_btn{
-  padding: 4px 10px;
-  border-radius: 15px;
+.categoria_btn {
+  padding: 8px;
+  border-radius: 12px;
   border: 1px solid #00000005;
   cursor: pointer;
+  font-size: 0.8rem;
   font-weight: bold;
+  width: 120px;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.categoria_btn_education{
+.categoria_btn_education {
   background-color: #e8f5ff;
   color: #0186e4;
+
+  &:hover {
+    background-color: #0186e4;
+    color: #e8f5ff;
+  }
+
+  &:focus {
+    color: #e8f5ff;
+    background-color: #0186e4;
+    transform: scale(1.1);
+  }
 }
-.categoria_btn_arte{
+
+.categoria_btn_arte {
   background-color: #f3e8ff;
   color: #8200db;
+
+  &:hover {
+    background-color: #8200db;
+    color: #f3e8ff;
+  }
+
+  &:focus {
+    color: #f3e8ff;
+    background-color: #8200db;
+    transform: scale(1.1);
+  }
 }
-.categoria_btn_evento{
+
+.categoria_btn_evento {
   background-color: #ffedd4;
   color: #ca3500;
+
+  &:hover {
+    background-color: #ca3500;
+    color: #ffedd4;
+  }
+
+  &:focus {
+    color: #ffedd4;
+    background-color: #ca3500;
+    transform: scale(1.1);
+  }
 }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
