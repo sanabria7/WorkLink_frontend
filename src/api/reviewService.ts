@@ -13,15 +13,6 @@ export async function getReviewsByCliente(clienteId: string): Promise<Review[]> 
 
 export async function getReviewsByProveedor(proveedorId: string): Promise<Review[]> {
     const  response  = await api.get(`${"/api/review/obtenerPorProveedor/"}${proveedorId}`);
-        console.log(
-        "RESPONSE REVIEWS:",
-        response
-    );
-
-    console.log(
-        "DATA REVIEWS:",
-        response.data
-    );
     return response.data;
 }
 

@@ -32,7 +32,7 @@ export default function PerfilUsuario({ usuario, onChange, disabled = false, err
             <img src={usuario.fotoPerfilUrl || "/src/assets/react.svg"} />
             <label htmlFor="user-fotoPerfilUrl">Editar Foto</label>
             <input id="user-fotoPerfilUrl"
-                type="url"
+                type="file"
                 value={usuario.fotoPerfilUrl || ""}
                 onChange={(evento) => handleFieldChange("fotoPerfilUrl", evento.target.value)}
                 disabled={disabled}

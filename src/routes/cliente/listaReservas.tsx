@@ -6,9 +6,12 @@ import type { ReservaDTO } from "../../types/reservaTypes";
 import CancelarReservaDialog from "../../components/modals/cancelarReservaModal";
 import { formatFecha, formatRangoHora } from "../../utils/formatFechas";
 import ReviewModal from "../../components/modals/reviewModal";
+import Icon from "../../components/misc/icon";
+import { useNavigate } from "react-router-dom";
 
 export default function MisReservas() {
     const { perfilCliente } = useAuth();
+    const navigate = useNavigate();
     const [reservas, setReservas] = useState<ReservaDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [reservaCancelar, setReservaCancelar] = useState<ReservaDTO | null>(null);
@@ -50,19 +53,14 @@ export default function MisReservas() {
     };
 
     const reservasOrdenadas = [...reservas].sort((a, b) => {
-        const horaA = a.rangoTiempoReservado.split(" - ")[0];
-        const horaB = b.rangoTiempoReservado.split(" - ")[0];
-
-        const fechaA = new Date(`${a.fechaReserva}T${horaA}`);
-        const fechaB = new Date(`${b.fechaReserva}T${horaB}`);
-
-        return fechaA.getTime() - fechaB.getTime();
+        const fechaHoraA = new Date(`${a.fechaReserva}T${a.rangoTiempoReservado.split(" - ")[0]}`);
+        const fechaHoraB = new Date(`${b.fechaReserva}T${b.rangoTiempoReservado.split(" - ")[0]}`);
+        return fechaHoraB.getTime() - fechaHoraA.getTime();
     });
 
     function puedeCancelar(reserva: ReservaDTO) {
         const horaInicio = reserva.rangoTiempoReservado.split(" - ")[0];
         const fechaReserva = new Date(`${reserva.fechaReserva}T${horaInicio}`);
-
         const limiteCancelacion = new Date(fechaReserva);
         limiteCancelacion.setDate(limiteCancelacion.getDate() - 1);
 
@@ -78,43 +76,45 @@ export default function MisReservas() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
                 <h1 style={{ fontSize: "2rem", fontWeight: 700 }}>Mis Reservas</h1>
             </div>
-
             {reservas.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "4rem", backgroundColor: "#f9fafb", borderRadius: "20px", border: "1px dashed #d1d5db" }}>
-                    <p style={{ color: "#6b7280" }}>Aún no tienes reservas realizadas</p>
+                <div style={{ textAlign: "center", padding: "5rem 2rem", backgroundColor: "#f9fafb", borderRadius: "24px", border: "1px dashed #d1d5db" }}>
+                    <div style={{ fontSize: "3.5rem", marginBottom: "1rem", opacity: 0.4 }}><Icon name="calendar"/></div>
+                    <h3>Aún no tienes reservas</h3>
+                    <p style={{ color: "#6b7280", maxWidth: "420px", margin: "0.75rem auto 0" }}>
+                        Cuando reserves un servicio aparecerá aquí con toda la información.
+                    </p>
                 </div>
             ) : (
                 <div style={{ backgroundColor: "white", borderRadius: "20px", overflow: "hidden", border: "1px solid #e5e7eb" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead>
                             <tr style={{ backgroundColor: "#f9fafb", textAlign: "left" }}>
-                                <th style={thStyle}>Servicio</th>
-                                <th style={thStyle}>Fecha</th>
+                                <th style={thStyle}>Servicio reservado</th>
+                                <th style={thStyle}>Fecha reservada</th>
                                 <th style={thStyle}>Horario</th>
                                 <th style={thStyle}>Modalidad</th>
                                 <th style={thStyle}>Precio</th>
-                                <th style={thStyle}>Estado</th>
+                                <th style={thStyle}>Estado de reserva</th>
                                 <th style={thStyle}>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {reservasOrdenadas.map((reserva) => {
                                 const cancelable = puedeCancelar(reserva);
+                                const esCompletada = reserva.estadoReserva === "COMPLETADA";
 
                                 return (
                                     <tr key={reserva.idReserva} style={{ borderTop: "1px solid #f3f4f6" }}>
                                         <td style={tdStyle}>
                                             <div>
-                                                <p style={{ fontWeight: 600 }}>{reserva.tituloServicio}</p>
+                                                <p style={{ fontWeight: 600, cursor: "pointer" }} onClick={()=> navigate(`/servicio/${reserva.servicioId}`)}>{reserva.tituloServicio}</p>
                                                 <p style={{ fontSize: "0.85rem", color: "#6b7280" }}>{reserva.categoriaServicio}</p>
                                             </div>
                                         </td>
-
                                         <td style={tdStyle}>{formatFecha(reserva.fechaReserva)}</td>
                                         <td style={tdStyle}>{formatRangoHora(reserva.rangoTiempoReservado)}</td>
                                         <td style={tdStyle}>{reserva.modalidad}</td>
-                                        <td style={tdStyle}>${reserva.precio}</td>
-
+                                        <td style={tdStyle}><strong>${reserva.precio.toLocaleString("es-CO")}</strong></td>
                                         <td style={tdStyle}>
                                             <span style={{
                                                 padding: "6px 12px",
@@ -127,31 +127,34 @@ export default function MisReservas() {
                                                 {reserva.estadoReserva}
                                             </span>
                                         </td>
-
                                         <td style={tdStyle}>
                                             {reserva.estadoReserva === "EN_CURSO" && (
                                                 <button
                                                     disabled={!cancelable}
                                                     onClick={() => setReservaCancelar(reserva)}
                                                     style={{
-                                                        backgroundColor: cancelable ? "#ef4444" : "#d1d5db",
-                                                        color: "white",
+                                                        backgroundColor: "transparent",
+                                                        color: cancelable ? "#ef4444" : "#d1d5db",
                                                         border: "none",
                                                         padding: "8px 14px",
                                                         borderRadius: "10px",
                                                         cursor: cancelable ? "pointer" : "not-allowed",
-                                                        fontWeight: 600
+                                                        fontWeight: 600,
+                                                        fontSize: "0.8rem",
+                                                        textDecoration:"underline"
                                                     }}
                                                 >
                                                     Cancelar
                                                 </button>
                                             )}
-                                            <button
-                                                onClick={() => setReviewReserva(reserva)}
-                                                style={{ backgroundColor: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "10px", cursor: "pointer", fontWeight: "600" }}
-                                            >
-                                                Dejar Reseña
-                                            </button>
+                                            {esCompletada && (
+                                                <button
+                                                    onClick={() => setReviewReserva(reserva)}
+                                                    style={{ display: "flex", alignItems: "center", backgroundColor: "#2563eb", color: "white", border: "none", padding: "8px 14px", borderRadius: "10px", cursor: "pointer", fontWeight: "600", fontSize: "0.75rem" }}
+                                                >
+                                                   Dejar Reseña
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 );

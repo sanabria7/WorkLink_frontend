@@ -127,7 +127,6 @@ export default function CrearServicio() {
     return (
         <form className="form" onSubmit={handleSubmit} aria-describedby="Servicio-error">
             <div>
-                <button className="btn-quaternary" type="button" onClick={() => navigate(-1)}>Atrás</button>
                 <h1>Crear Servicio</h1>
             </div>
             {errorResponse.general &&
@@ -224,7 +223,7 @@ export default function CrearServicio() {
                     {errorResponse.ubicacion}
                 </span>}
             <button type="submit" disabled={saving} aria-busy={saving}>{saving ? "Creando servicio..." : "Publicar"}</button>
-            <button type="reset" onClick={() => navigate("/dashboard")}>Cancelar</button>
+            <button style={{backgroundColor: "#dc2626", color:"white"}} type="reset" onClick={() => navigate(-1)}>Cancelar</button>
         </form>
     );
 }

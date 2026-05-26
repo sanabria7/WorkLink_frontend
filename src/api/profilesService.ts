@@ -1,5 +1,6 @@
 import api from "./axiosProfiles";
 import type { ProfileCliente, ProfileProveedor, ProfilesUser } from "../types/userTypes";
+import type { CuentaBancariaRequest } from "../types/pagosTypes";
 
 /* Crear usuario */
 export async function createUser(usuario: ProfilesUser): Promise<ProfilesUser> {
@@ -18,7 +19,7 @@ export async function createPerfilCliente(perfil: ProfileCliente): Promise<Profi
     return data;
 }
 
-export async function getPerfilCliente(correo: string/* , usuario: ProfilesUser */): Promise<ProfileCliente> {
+export async function getPerfilCliente(correo: string): Promise<ProfileCliente> {
     const { data } = await api.get<ProfileCliente>(`${"/api/perfil-cliente"}/${correo}`);
     return {
         usuario: data.usuario,
@@ -49,7 +50,7 @@ export async function createPerfilProveedor(perfil: ProfileProveedor): Promise<P
     return data;
 }
 
-export async function getPerfilProveedor(correo: string/* , usuario: ProfilesUser */): Promise<ProfileProveedor> {
+export async function getPerfilProveedor(correo: string): Promise<ProfileProveedor> {
     const { data } = await api.get<ProfileProveedor>(`${"/api/perfil-servidor/e"}/${correo}`);
     console.log("esta es la data mi rey: ", data);
     return {
@@ -79,4 +80,13 @@ export async function deletePerfilProveedor(correo: string): Promise<void> {
 export async function obtenerTodosProveedores(): Promise<ProfileProveedor[]> {
     const { data } = await api.get("api/perfil-servidor/all");
     return data;
+}
+
+export async function obtenerCuentaBancaria(id: string) {
+    const { data } = await api.get(`/api/perfil-servidor/perfil/proveedor/${id}/cuenta-bancaria`);
+    return data;
+}
+
+export async function guardarCuentaBancaria(id: string, request: CuentaBancariaRequest): Promise<void> {
+    await api.put(`/api/perfil-servidor/perfil/proveedor/${id}/cuenta-bancaria`, request);
 }

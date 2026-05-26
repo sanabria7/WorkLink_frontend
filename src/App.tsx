@@ -23,8 +23,12 @@ import Servicio from './routes/servicio/servicioVista.tsx';
 import Calendario from './routes/proveedor/calendario.tsx';
 import ConfigurarHorarios from './components/pages/configHorarios.tsx';
 import MisReservas from './routes/cliente/listaReservas.tsx';
-import ProveedorReviews from './routes/proveedor/reviews.tsx';
+import ProveedorReviews from './routes/proveedor/reviewsProv.tsx';
 import CheckoutPage from './routes/cliente/checkout.tsx';
+import MisPagosCliente from './routes/cliente/pagosCliente.tsx';
+import MisPagosProveedor from './routes/proveedor/pagosProv.tsx';
+import ConfigurarCuentaBancaria from './components/pages/configCuentaBancaria.tsx';
+import MisReseñasCliente from './routes/cliente/reviewsCliente.tsx';
 
 const router = createBrowserRouter([
     {
@@ -53,6 +57,8 @@ const router = createBrowserRouter([
                             { path: "/home", element: <Home /> },
                             { path: "/mis-reservas", element: <MisReservas /> },
                             { path: "/checkout", element: <CheckoutPage /> },
+                            { path: "/mis-pagos", element: <MisPagosCliente /> },
+                            { path: "/mis-reseñas", element: <MisReseñasCliente /> },
                         ]
                     },
                     {
@@ -64,7 +70,9 @@ const router = createBrowserRouter([
                             { path: "/mis-servicios", element: <MisServicios /> },
                             { path: "/calendario", element: <Calendario /> },
                             { path: "/configurar-horarios", element: <ConfigurarHorarios /> },
-                            { path: "/reseñas-prov", element: <ProveedorReviews /> }
+                            { path: "/reseñas-prov", element: <ProveedorReviews /> },
+                            { path: "/gestion-pagos", element: <MisPagosProveedor /> },
+                            { path: "/configurar-cuenta-bancaria", element: <ConfigurarCuentaBancaria /> }
                         ]
                     },
                 ]

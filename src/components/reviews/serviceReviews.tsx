@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import type { Review } from "../../types/userTypes";
 import { getReviewsByServicio } from "../../api/reviewService";
 import ReviewCard from "./reviewCard";
-import ReviewStats from "./reviewStats";
 import ReviewsModal from "../modals/reviewServiceModal";
+import Icon from "../misc/icon";
 
 interface Props {
     servicioId: string;
@@ -30,34 +30,32 @@ export default function ServiceReviews({ servicioId }: Props) {
         cargarReviews();
     }, [servicioId]);
 
+    if (loading) { return <div style={{ padding: "3rem", textAlign: "center" }}>Cargando reseñas...</div>; }
+    if (reviews.length === 0) <div style={{ fontWeight: "400", color: "grey", fontSize: "0.8rem" }}>Este servicio aún no tiene reseñas</div>
+
     return (
-        <section style={{ display: "flex", flexDirection: "column", gap: "10px"}}>
-            <ReviewStats reviews={reviews} />
-            {loading ? (
-                <p>Cargando reseñas...</p>
-            ) : reviews.length === 0 ? (
-                <p>Este servicio todavía no tiene reseñas.</p>
-            ) : (
-                <>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "24px 28px" }}>
-                        {reviews.slice(0, 3).map((review) => (
-                            <ReviewCard key={review.id} review={review} />
-                        ))}
-                    </div>
-                    {reviews.length > 3 && (
-                        <button
-                            onClick={() => setModalOpen(true)}
-                            style={{ width: "100%", padding: "12px 18px", border: "none", borderRadius:"10px", backgroundColor: "none", cursor: "pointer", fontWeight: 600 }}>
-                            Ver todas las reseñas
-                        </button>
-                    )}
-                </>
-            )}
+        <div style={{ marginBottom: "1rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h2 style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 700 }}><Icon name="star_filled" />Reseñas</h2>
+                {reviews.length > 3 && (
+                    <button
+                        onClick={() => setModalOpen(true)}
+                        style={{ color: "#2563eb", fontWeight: 600, background: "none", border: "none", cursor: "pointer" }}
+                    >
+                        Ver todas ({reviews.length})
+                    </button>
+                )}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "8px", marginTop: "0.75rem" }}>
+                {reviews.slice(0, 3).map(review => (
+                    <ReviewCard key={review.id} review={review} showServiceName={false} />
+                ))}
+            </div>
             <ReviewsModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 reviews={reviews}
             />
-        </section>
+        </div>
     );
 }

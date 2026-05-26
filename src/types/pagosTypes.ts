@@ -1,3 +1,6 @@
+import type { ReservaDTO } from "./reservaTypes";
+import type { profilesService } from "./serviceTypes";
+
 export type MetodoPago = "TARJETA" | "PSE" | "EFECTIVO";
 
 export interface TarjetaRequest {
@@ -23,5 +26,56 @@ export interface PagoResponse {
     fechaPago?: string;
     estadoPago?: string;
     metodoPago?: string;
-    montoPago?: number;
+    monto?: number;
+    tokenConfirmacion?: string;
+}
+
+export interface TransferenciaResponse {
+    pagoID?: string;
+    banco?: string;
+    titular?: string;
+    mensaje: string;
+    monto?: string;
+    tipoCuenta?: string;
+    numeroCuenta?: string;
+    transferenciaID?: string;
+    createdAt: string;
+    fechaTransferencia?: string;
+    estadoTransferencia?: string;
+}
+
+export interface TransferenciaPendiente {
+    id: string;
+    proveedorID: number;
+    pagoID: string;
+    monto: number;
+    titular: string;
+    banco: string;
+    tipoCuenta: string;
+    numeroCuenta: string;
+    documento: string;
+    estado: string;
+    createdAt: string;
+    transferidoAt?: string | null;
+}
+
+export interface PaymentSession {
+    pago: PagoResponse;
+    servicio: profilesService;
+    reserva: ReservaDTO;
+    idsSlots: number[];
+    createdAt: string;
+}
+
+export interface CuentaBancariaRequest {
+    titular: string;
+    numeroCuenta: string;
+    tipoCuenta: "AHORROS" | "CORRIENTE";
+    banco: string;
+    documento: string;
+}
+
+export interface CuentaBancariaResponse extends CuentaBancariaRequest {
+    cuentaVinculada: boolean;
+    cuentaVinculadaAt: string;
 }

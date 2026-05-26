@@ -2,20 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 import * as profilesService from "../api/profilesService";
 import type { AuthUser, ProfileCliente, ProfileProveedor, ProfilesUser } from "../types/userTypes";
 
-/**
- * useProfile
- * - user: objeto user proveniente de AuthProvider (debe contener .correo y .rol)
- *
- * Retorna:
- * - cliente: ProfileCliente | null
- * - proveedor: ProfileProveedor | null
- * - loading: boolean
- * - saving: boolean
- * - error: any
- * - setCliente, setProveedor: setters para actualizar estado local (útil para inputs controlados)
- * - saveCliente(payload): guarda perfil cliente en backend y actualiza estado local
- * - saveProveedor(payload): guarda perfil proveedor en backend y actualiza estado local
- */
 export function useProfile(user: AuthUser | null) {
   console.log("useProfile llamado con user:", user);
   const [cliente, setCliente] = useState<ProfileCliente | null>(null);
@@ -40,22 +26,16 @@ export function useProfile(user: AuthUser | null) {
         setLoading(false);
         return;
       }
-/* 
-      const usuarioBase: ProfilesUser = {
-        email: user.correo,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        telefono: user.telefono,
-      }; */
+
       console.log("AuthUser recibido en useProfile:", user);
       try {
         if (user.rol.toLocaleLowerCase() === "cliente") {
-          const perfilCli = await profilesService.getPerfilCliente(user.correo/* , usuarioBase */);
+          const perfilCli = await profilesService.getPerfilCliente(user.correo);
           console.log("Perfil cliente cargado en useProfile:", perfilCli);
           if (mounted) setCliente(perfilCli);
           
         } else if (user.rol.toLocaleLowerCase() === "proveedor") {
-          const perfilProv = await profilesService.getPerfilProveedor(user.correo/* , usuarioBase */);
+          const perfilProv = await profilesService.getPerfilProveedor(user.correo);
           console.log("Perfil proveedor cargado en useProfile:", perfilProv);
           if (mounted) setProveedor(perfilProv);
         }
