@@ -13,6 +13,7 @@ export default function SbKeyModal({ value, onChange, onClose }: SbKeyModalProps
             <input
                 // style={{width:"20%"}}
                 type="search"
+                className="input-modal"
                 placeholder="Encuentra por palabra clave"
                 autoFocus
                 value={value}

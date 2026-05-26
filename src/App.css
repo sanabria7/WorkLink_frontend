@@ -584,6 +584,16 @@ input[type="text"],
   height: 250px;
   width: 50%;
 
+  .input-modal{
+    height: 30px;
+    width: 80%;
+    border-radius: 8px;
+  }
+  .input-modal:focus{
+    outline: none;
+    border: 2px solid #60b5ff;
+  }
+
 }
 .searchBar_modal_center{
   left: 25%;

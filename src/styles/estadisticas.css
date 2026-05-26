@@ -1,0 +1,99 @@
+.estadisticas-container{
+
+
+    .header-estadisticas {
+        /* background: #60b5ff; */
+        background: #4a90e2;
+        color: #fff;
+        padding: 20px 40px;
+        }
+        .header-estadisticas h1 {
+        margin: 0;
+        font-size: 22px;
+        }
+
+        .title_desc{
+            text-align: center;
+        }
+        .dashboard {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 30px;
+        }
+
+        .metrics {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+        }
+        .metric-card {
+        flex: 1;
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        text-align: center;
+        }
+        .metric-card h2 {
+        margin: 0;
+        font-size: 26px;
+        /* color: #60b5ff; */
+        color: #4a90e2;
+        }
+        .metric-card p {
+        margin: 8px 0 0;
+        font-size: 14px;
+        color: #666;
+        }
+
+        .charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        }
+        .placeholder {
+        background: #eaeaea;
+        border-radius: 10px;
+        height: 400px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-style: italic;
+        color: #999;
+        
+        }
+
+        svg:focus,  g:focus{
+            outline: none;
+        }
+        svg{
+            overflow: visible;
+        }
+        .title_grafic{
+            position: absolute;
+            width: 250px;
+            top: 0.5px;
+            left: 22px;
+        }
+        .service_title{
+        position: absolute;
+        width: 180px;
+        top: 0.5px;
+        right: 22px;
+        }
+        .container-Piecharts{
+        
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            
+        }
+        .notifications {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        }
+    }
