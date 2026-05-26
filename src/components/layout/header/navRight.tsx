@@ -64,12 +64,6 @@ export default function NavRight() {
         </div>
       )}
 
-      <div datatype="Cambiar idioma" aria-label="Cambiar idioma" className="btn-quaternary">
-        <button type="button" onClick={() => alert("Español, Inglés, Messi")}>
-          <span><Icon name="language" /></span>
-        </button>
-      </div>
-
       <div className="btn-quaternary">
         <button type="button" onClick={() => setMenuOpen((prevOpen) => !prevOpen)}>
           <span><Icon name="menu" /></span>
@@ -79,21 +73,44 @@ export default function NavRight() {
       {menuOpen && (
         <ul id="user-menu" className="dropdown" role="menu" ref={menuRef}>
           {!isAuthenticated ? (
-            <>
-              <li><button onClick={() => setMenuOpen(false)} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Centro de ayuda</button></li>
-              <li><button onClick={() => { setMenuOpen(false); navigate("/login"); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Conviértete en proveedor</button></li>
-            </>
+            <div>
+              <li className="dropdown__item"><button className="dropdown__button" onClick={() => setMenuOpen(false)} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Centro de ayuda</button></li>
+              <li className="dropdown__item"><button className="dropdown__button" onClick={() => { setMenuOpen(false); navigate("/login"); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Conviértete en proveedor</button></li>
+            </div>
           ) : (
             <>
-              <li style={{ display: "flex", alignItems: "initial", fontSize:"0.75rem", fontWeight:"600"}}>{perfilName.toUpperCase()}</li>
-              {menuItems.map((item) => (
-                <li key={item.label}>
-                  <button onClick={() => { setMenuOpen(false); item.action(); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    {item.icon && <Icon name={item.icon}></Icon>}
-                    {item.label}
-                  </button>
-                </li>
-              ))}
+              {/* NOMBRE */}
+              <div className="dropdown__header">
+                <li className="name">{perfilName.toUpperCase()}</li>
+              </div>
+              {/* OPCIONES */}
+              <div>
+                {menuItems
+                  .filter((item) => item.label !== "Cerrar sesión")
+                  .map((item) => (
+                    <li className="dropdown__item" key={item.label}>
+                      <button className="dropdown__button" onClick={() => { setMenuOpen(false); item.action(); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        {item.icon && <Icon name={item.icon}></Icon>}
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+              </div>
+              {/* LOGOUT */}
+              <div className="dropdown__section">
+                {menuItems
+                  .filter((item) => item.label === "Cerrar sesión")
+                  .map((item) => (
+                    <li key={item.label} className="dropdown__item">
+                      <button
+                        className="dropdown__button dropdown__button--danger"
+                        onClick={() => { setMenuOpen(false); item.action(); }}>
+                        {item.icon && <Icon name={item.icon} />}
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+              </div>
             </>
           )}
         </ul>

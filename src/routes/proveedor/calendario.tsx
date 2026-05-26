@@ -119,7 +119,7 @@ export default function Calendario() {
                 <h1 style={{ fontWeight: "bold" }}>Mi Calendario</h1>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                     <button onClick={cargarHorarios} style={{ display: "flex", alignItems: "center",backgroundColor: "#2563eb", color: "white", border: "none", borderRadius: "0.5rem", padding: "10px", cursor: "pointer", fontWeight: 600, transition: "background-color 0.3s ease, transform 0.2s ease" }}>
-                        <Icon name="refresh"/>Actualizar calendario
+                        <svg style={{width:"18px", height:"18px", marginRight:"6px"}}><Icon name="refresh"/></svg> Actualizar
                     </button>
                 </div>
             </div>

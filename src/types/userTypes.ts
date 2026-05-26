@@ -53,7 +53,7 @@ export interface Review {
     fechaCreacion?: string;
     clienteId?: string;
     proveedorId?: string;
-    idService?: number;
+    serviceId?: number;
     codigoReserva?: string;
 }
 

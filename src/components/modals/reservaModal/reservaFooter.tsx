@@ -6,36 +6,14 @@ interface ReservaFooterProps {
 }
 
 export default function ReservaFooter({ disabled, submitting, onClose, onReservar }: ReservaFooterProps) {
-
     return (
-
-        <div
-            style={{
-                borderTop: "1px solid #e5e7eb",
-                padding: "16px 24px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: "12px",
-                flexWrap: "wrap"
-            }}
-        >
-
+        <div style={{ borderTop: "1px solid #e5e7eb", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
             <button
                 onClick={onClose}
-                style={{
-                    padding: "12px 16px",
-                    borderRadius: "12px",
-                    border: "1px solid #d1d5db",
-                    backgroundColor: "#ffffff",
-                    color: "#0f172a",
-                    fontWeight: 600,
-                    cursor: "pointer"
-                }}
+                style={{ padding: "12px 16px", borderRadius: "12px", border: "1px solid #d1d5db", backgroundColor: "#ffffff", color: "#0f172a", fontWeight: 600, cursor: "pointer" }}
             >
                 Cancelar
             </button>
-
             <button
                 onClick={onReservar}
                 disabled={disabled}
@@ -66,7 +44,6 @@ export default function ReservaFooter({ disabled, submitting, onClose, onReserva
                     ? "Procesando..."
                     : "Reservar ahora"}
             </button>
-
         </div>
     );
 }

@@ -14,22 +14,23 @@ export function useUserMenu(
     handleLogOut: () => void
 ): MenuItem[] {
     return useMemo(() => {
-        const base = [
-            { label: "Perfil", action: () => navigate("/perfil") },
-            { label: "Cerrar sesión", action: handleLogOut },
+        const base: MenuItem[] = [
+            { label: "Perfil", action: () => navigate("/perfil"), icon:"account" },
+            { label: "Cerrar sesión", action: handleLogOut, icon: "logout" },
         ];
 
         if (role === "cliente") {
-            return [
-                { label: "Mis reservas", action: () => navigate("/mis-reservas"), icon: "calendar" },
-                { label: "Mis pagos", action: () => navigate("/mis-pagos") },
+            return [                
                 ...base,
+                { label: "Reservas", action: () => navigate("/mis-reservas"), icon: "calendar" },
+                { label: "Pagos", action: () => navigate("/mis-pagos"), icon: "price_quality" },
+                { label: "Reseñas", action: () => navigate("/mis-reseñas"), icon: "message" },
             ];
         } else if (role === "proveedor") {
-            return [
-                { label: "Crear servicio", action: () => navigate("/crear-servicio") },
-                { label: "Gestionar pagos", action: () => navigate("/gestion-pagos") },
+            return [                
                 ...base,
+                { label: "Crear servicio", action: () => navigate("/crear-servicio"), icon: "add" },
+                { label: "Gestionar pagos", action: () => navigate("/gestion-pagos"), icon: "price_quality" },
             ];
         }
 

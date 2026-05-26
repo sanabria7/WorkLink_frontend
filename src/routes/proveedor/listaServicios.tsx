@@ -88,9 +88,9 @@ export default function MisServicios() {
         </div>
         <button
           onClick={() => navigate("/crear-servicio")}
-          style={{ display: "flex", alignItems: "center", border: "none", backgroundColor: "#2563eb", color: "#ffffff", padding: "14px 18px", borderRadius: "14px", cursor: "pointer", fontSize: "1rem", fontWeight: 700 }}
+          style={{ display: "flex", alignItems: "center", border: "none", backgroundColor: "#2563eb", color: "#ffffff", padding: "10px", borderRadius: "14px", cursor: "pointer", fontWeight: 600 }}
         >
-          <Icon name="add" />Crear servicio
+          <svg style={{width:"18px", height:"18px", marginRight:"6px"}}><Icon name="add" /></svg>Crear servicio
         </button>
       </div>
       {/* TABLA */}

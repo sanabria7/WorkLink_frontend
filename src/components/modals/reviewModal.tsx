@@ -13,21 +13,17 @@ interface ReviewModalProps {
 
 export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps) {
     const [comentario, setComentario] = useState("");
-    const [calificacion, setCalificacion] = useState(5);
+    const [calificacion, setCalificacion] = useState(0);
     const [hoveredStar, setHoveredStar] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
 
     async function handleGuardarReview() {
-
         if (!reserva) return;
 
         if (!comentario.trim()) {
-            alert("Escribe un comentario");
+            alert("Debes escribir un comentario");
             return;
         }
-
-        console.log("RESERVA COMPLETA REVIEW:", reserva);
-        console.log("SERVICIO ID REVIEW:", reserva.servicioId);
 
         try {
             setLoading(true);
@@ -36,16 +32,16 @@ export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps
                 calificacion,
                 clienteId: reserva.clienteId,
                 proveedorId: reserva.proveedorId,
-                idService: reserva.servicioId,
+                serviceId: reserva.servicioId,
                 /* codigoReserva: reserva.idReserva, */
             };
             console.log("PAYLOAD REVIEW:", nuevaReview);
             await reviewService.guardarReview(nuevaReview);
-            alert("Reseña enviada correctamente");
+            alert("¡Reseña enviada con éxito! Gracias por tu opinión.");
             handleClose();
         } catch (error) {
             console.error(error);
-            alert("No se pudo guardar la reseña");
+            alert("No se pudo guardar la reseña. Inténtalo nuevamente.");
         } finally {
             setLoading(false);
         }
@@ -61,7 +57,7 @@ export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps
         <Dialog open={open} onClose={handleClose} style={{ position: "fixed", inset: 0, zIndex: 100 }}>
             <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.7)" }}>
                 <div style={{ backgroundColor: "white", width: "100%", maxWidth: "500px", borderRadius: "24px", padding: "24px" }}>
-                    <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "20px" }}>
+                    <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "20px", marginTop: "0px" }}>
                         Dejar reseña
                     </h2>
                     <div style={{ marginBottom: "24px" }}>
@@ -71,7 +67,7 @@ export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps
                         <p style={{ marginTop: "-4px", marginBottom: "16px", color: "#6b7280", fontSize: "14px" }}>
                             ¿Cómo fue tu experiencia con este servicio?
                         </p>
-                        <div style={{ display: "flex", gap: "10px" }}>
+                        <div style={{ display: "flex", gap: "6px" }}>
                             {[1, 2, 3, 4, 5].map((star) => {
                                 const active =
                                     hoveredStar !== null
@@ -113,16 +109,16 @@ export default function ReviewModal({ open, onClose, reserva }: ReviewModalProps
                     <div style={{ display: "flex", justifyContent: "end", gap: "12px" }}>
                         <button
                             onClick={handleClose}
-                            style={{ padding: "12px 16px", borderRadius: "12px", border: "1px solid #d1d5db", cursor: "pointer" }}
+                            style={{ padding: "12px 16px", borderRadius: "12px", fontSize: "0.9rem", border: "1px solid #d1d5db", cursor: "pointer" }}
                         >
                             Cancelar
                         </button>
                         <button
                             onClick={handleGuardarReview}
                             disabled={loading}
-                            style={{ padding: "12px 16px", borderRadius: "12px", border: "none", backgroundColor: "#2563eb", color: "white", cursor: "pointer" }}
+                            style={{ padding: "12px 16px", borderRadius: "12px", border: "none", fontSize: "0.9rem", backgroundColor: "#2563eb", color: "white", cursor: "pointer" }}
                         >
-                            {loading ? "Enviando..." : "Enviar reseña"}
+                            {loading ? "Enviando..." : "Publicar reseña"}
                         </button>
                     </div>
                 </div>

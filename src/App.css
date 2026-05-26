@@ -1,8 +1,8 @@
 /* @import "tailwindcss"; */
 
 :root {
-  font-family: Roboto;
-  font-weight: 500;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-weight: 400;
 }
 
 body {
@@ -21,18 +21,15 @@ label {
 
 .nav-panel {
   background-color: inherit;
-  /* mantiene el color actual */
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  margin-bottom: 2rem;
 }
 
 .nav-links {
   list-style: none;
+  gap: 1rem;
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  /* separa los botones */
   margin: 0;
   padding: 0;
 }
@@ -45,16 +42,14 @@ label {
   text-decoration: none;
   font-weight: 600;
   color: inherit;
-  /* mantiene el color actual */
   padding: 0.5rem 1rem;
-  /* da espacio interno a cada enlace */
-  border-radius: 6px;
+  border-radius: 6px 6px 0px 0px;
   transition: background-color 0.3s ease;
 }
 
 .nav-links a:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  /* efecto hover suave */
+  border-bottom: solid 2px #555;
+  color: #555;
 }
 
 input[type="text"],
@@ -213,36 +208,107 @@ input[type="text"],
 
       .dropdown {
         position: absolute;
-        top: 3rem;
+        top: 3.5rem;
         right: 1rem;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+        width: 260px;
+        background: #ffffff;
+
+        border: 1px solid #e9ecef;
+        border-radius: 14px;
+
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04);
+
+        padding: 0.75rem;
         list-style: none;
-        padding: 0.5rem 0;
-        min-width: 180px;
+
         z-index: 100;
 
-        li {
-          padding: 0.5rem 1rem;
+        overflow: hidden;
+
+        animation: dropdownFade 0.18s ease;
+
+
+        .dropdown__header {
+          padding: 0.85rem 1rem;
+          border-bottom: 1px solid #f1f3f5;
+          margin-bottom: 0.35rem;
+
+          .name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.2rem;
+            background-color: transparent;
+          }
+        }
+
+        .dropdown__item {
+          width: 100%;
+        }
+
+        .dropdown__section {
+          padding: 2px;
+          border-top: 1px solid #f1f3f5;
+          margin-top: 0.35rem;
+
+          .dropdown__item {
+            margin-top: 4px;
+          }
+
+          .dropdown__button {
+            background-color: inherit;
+            color: #dc2626;
+            &:hover {
+              background-color: #dc2626;
+              color: #ffffff;
+            }
+          }
+        }
+
+        .dropdown__button {
+          width: 100%;
+          border: none;
+          background-color: transparent;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 0.75rem;
+          border-radius: 10px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: #505661;
+          cursor: pointer;
+          transition: all 0.18s ease;
+          text-align: left;
 
           &:hover {
-            background-color: #f9f9f9;
+            background-color: #ebeef1;
+            color: #3a5283;
+            transform: translateX(2px);
           }
 
-          a,
-          button {
-            text-decoration: none;
-            color: #333;
-            font-size: 0.9rem;
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            cursor: pointer;
-
+          svg {
+            font-size: 1rem;
+            opacity: 0.85;
           }
+
+
+        }
+
+      }
+
+      @keyframes dropdownFade {
+        from {
+          opacity: 0;
+          transform: translateY(-6px) scale(0.98);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
         }
       }
     }
@@ -332,18 +398,18 @@ input[type="text"],
   }
 
   .btn-quaternary button {
-        width: 44px;
-        /* cuadrado para icono */
-        height: 44px;
-        min-width: 44px;
-        border-radius: 50%;
-        padding: 0;
-        background: transparent;
+    width: 44px;
+    /* cuadrado para icono */
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    padding: 0;
+    background: transparent;
 
-        &:hover {
-          background-color: #f0f0f0;
-        }
-      }
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
 
   p {
     font-size: 0.85rem;
@@ -363,7 +429,7 @@ input[type="text"],
 }
 
 .rbc-event-label {
-    display: none !important;
+  display: none !important;
 }
 
 .radioButtonGroup {
@@ -373,6 +439,7 @@ input[type="text"],
   height: fit-content;
   gap: 0.75rem;
   font-family: Arial, sans-serif;
+  cursor: pointer;
 }
 
 .edit-form {
@@ -425,8 +492,17 @@ input[type="text"],
 }
 
 textarea {
-  font-size: 1rem;
+  font-size: 15px;
   font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+
+  &:focus {
+    border-color: #0077ff;
+    box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.2);
+    outline: none;
+  }
 }
 
 .fieldset input,
