@@ -10,7 +10,7 @@ import Icon from "../misc/icon";
 
 export default function EditPerfilProveedor() {
   const { user } = useAuth();
-  const { proveedor, rolActivo, setProveedor, saveProveedor, loading, saving, error } = useProfile(user);
+  const { proveedor, rolActivo, setProveedor, saveProveedor, loading, saving} = useProfile(user);
   const [errorResponse, setErrorResponse] = useState<Record<string, string>>({})
 
   if (loading) return <p>Cargando perfil...</p>;

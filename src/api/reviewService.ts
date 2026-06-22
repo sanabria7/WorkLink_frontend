@@ -29,7 +29,7 @@ export async function guardarReview(review: Review): Promise<Review> {
             comentario: review.comentario,
             idCliente: review.clienteId,
             idProveedor: review.proveedorId,
-            idService: review.idService,
+            idService: review.serviceId,
         }
     );
     return data;

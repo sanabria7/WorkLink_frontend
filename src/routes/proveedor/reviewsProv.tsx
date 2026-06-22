@@ -4,7 +4,6 @@ import type { Review } from "../../types/userTypes";
 import ReviewCard from "../../components/reviews/reviewCard";
 import ReviewStats from "../../components/reviews/reviewStats";
 import { useAuth } from "../../auth/authProvider";
-import Icon from "../../components/misc/icon";
 import { useNavigate } from "react-router-dom";
 
 export default function ProveedorReviews() {
