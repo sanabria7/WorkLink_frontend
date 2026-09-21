@@ -25,4 +25,7 @@ export default defineConfig({
       "/payments": gateway,
     },
   },
+  build: {
+    cssMinify: false   // de origin/main ("se corrigen errores"): evita un fallo del minificador de CSS
+  },
 })

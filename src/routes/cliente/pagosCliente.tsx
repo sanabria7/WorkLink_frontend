@@ -5,7 +5,7 @@ import * as pagosService from "../../api/pagosService";
 import PaymentSessionCard from "../../components/payments/paymentSessionCard";
 import { Dialog } from "@headlessui/react";
 import Icon from "../../components/misc/icon";
-import type { PagoResponse } from "../../types/pagosTypes";
+import type { PagoResponse, PaymentSession } from "../../types/pagosTypes";
 
 export default function MisPagosCliente() {
     const navigate = useNavigate();
@@ -99,7 +99,7 @@ export default function MisPagosCliente() {
             <Dialog open={!!selectedPago} onClose={() => setSelectedPago(null)} style={{ position: "fixed", inset: 0, zIndex: 1000 }}>
                 <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0.75)", padding: "20px" }}>
                     <div style={{ backgroundColor: "white", width: "100%", maxWidth: "720px", borderRadius: "24px", overflow: "hidden" }}>
-                        {selectedPago && <PaymentSessionCard session={{ pago: selectedPago }} />}
+                        {selectedPago && <PaymentSessionCard session={{ pago: selectedPago } as PaymentSession} />}
                         <div style={{ padding: "1.25rem", textAlign: "center", borderTop: "1px solid #e5e7eb" }}>
                             <button onClick={() => setSelectedPago(null)} style={{ padding: "8px", borderRadius: "12px", width:"100%", fontWeight:600,fontSize: "0.9rem", border: "1px solid #d1d5db", cursor: "pointer" }}>Cerrar</button>
                         </div>

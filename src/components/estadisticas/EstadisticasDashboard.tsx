@@ -44,7 +44,7 @@ export default function Estadisticas(){
                     <p>Satisfacción</p>
                 </div>
                 <div className="metric-card">
-                    <h2>{estadisticas && estadisticas.porcentajePorEstado && estadisticas.porcentajePorEstado.COMPLETADA.toFixed(1) || 0}%</h2>
+                    <h2>{estadisticas && estadisticas.porcentajePorEstado.COMPLETADA && estadisticas.porcentajePorEstado.COMPLETADA.toFixed(1) || 0}%</h2>
                     <p>Servicios completados</p>
                 </div>
                 </div>
