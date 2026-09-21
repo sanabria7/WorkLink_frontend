@@ -86,10 +86,12 @@ export default function MisPagosProveedor() {
 
         try {
             await marcarTransferido(id);
-            alert("Transferencia marcada como realizada.");
+            setSelectedTransferencia(null);
             await cargarTransferencias();
+            alert("Transferencia marcada como realizada.");
         } catch (error) {
             console.error("Error al marcar como transferido:", error);
+            alert("No se pudo marcar la transferencia. Intenta de nuevo.");
         }
     };
 

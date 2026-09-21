@@ -26,16 +26,16 @@ export default function SearchBar() {
 
     return (
         <form onSubmit={handleSearch} role="search" aria-label="Formulario de búsqueda">
-            <div className="btn-searchbar" aria-label="Palabra clave" onClick={() => setOpenModal("palabra")}>
+            <button type="button" className="btn-searchbar" aria-label="Palabra clave" onClick={() => setOpenModal("palabra")}>
                 <span>{palabra || "Palabra clave"}</span>
-            </div>
-            <div className="btn-searchbar" aria-label="Agregar categoria" onClick={() => setOpenModal("service")}>
+            </button>
+            <button type="button" className="btn-searchbar" aria-label="Agregar categoria" onClick={() => setOpenModal("service")}>
                 <span>{service || "Agregar categoria"}</span>
-            </div>
-            <div className="btn-searchbar" aria-label="Agregar precio" onClick={()=> setOpenModal("precio")}>
-                <span>{precio && `$ ${precio}` || "Agregar precio"}</span>
-            </div>
-            <button type="submit" className="btn-primary" datatype="submit" aria-label="Buscar">
+            </button>
+            <button type="button" className="btn-searchbar" aria-label="Agregar precio" onClick={()=> setOpenModal("precio")}>
+                <span>{precio ? `$ ${precio}` : "Agregar precio"}</span>
+            </button>
+            <button type="submit" className="btn-primary" aria-label="Buscar">
                 <span style={{display:"flex"}}><Icon name="search"></Icon></span>
             </button>
             {/* Modales */}

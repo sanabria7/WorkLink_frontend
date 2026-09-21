@@ -19,10 +19,14 @@ export default function Login() {
         setLoading(true)
         try {
             const loggedUser = await login(correo, password);
-            if (loggedUser?.rol === "cliente") {
-                navigate("/", { replace: true });
-            } else if (loggedUser?.rol === "proveedor") {
+            // Redirige segun el rol que devuelve /user/me (la cookie es HttpOnly,
+            // el front no puede leer el JWT).
+            if (loggedUser.rol === "cliente") {
+                navigate("/home", { replace: true });
+            } else if (loggedUser.rol === "proveedor") {
                 navigate("/dashboard", { replace: true });
+            } else {
+                setErrorResponse("Tu cuenta no tiene un rol valido. Contacta a soporte.");
             }
         } catch (err: unknown) {
             if (isAxiosError(err)) {

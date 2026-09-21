@@ -9,6 +9,8 @@ import DefaultLayout from './components/layout/defaultLayout.tsx';
 import RolRoute from './routes/rolRoute.tsx';
 import ForgotPassword from './routes/forgot-password.tsx';
 import ResetPassword from './routes/reset-password.tsx';
+import VerificaCorreo from './routes/verificaCorreo.tsx';
+import Verificar from './routes/verificar.tsx';
 import ProveedorPublicView from './routes/proveedor/perfilProveedorVista.tsx';
 import PerfilRedirect from './components/pages/perfilRedirect.tsx';
 import Dashboard from './routes/proveedor/dashboard.tsx';
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
                     { path: "/registro", element: <Registro /> },
                     { path: "/forgot-password", element: <ForgotPassword /> },
                     { path: "/reset-password", element: <ResetPassword /> },
+                    { path: "/verifica-correo", element: <VerificaCorreo /> },
+                    { path: "/verificar", element: <Verificar /> },
                 ]
             },
             {

@@ -8,7 +8,7 @@ export default function NavRight() {
   const { isAuthenticated, user, perfilCliente, perfilProveedor, logout, cambiarRol } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLUListElement | null>(null);
+  const menuWrapperRef = useRef<HTMLDivElement | null>(null);
   const menuItems = useUserMenu(user?.rol, navigate, handleLogOut);
 
   const perfilName =
@@ -33,9 +33,12 @@ export default function NavRight() {
     }
   }
 
+  // Cierra al hacer clic FUERA del bloque hamburguesa+menú. El wrapper incluye
+  // el botón: así el mousedown sobre la hamburguesa no cierra lo que el click
+  // acaba de abrir (antes: mousedown cerraba y click reabría -> nunca cerraba).
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (menuWrapperRef.current && !menuWrapperRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     }
@@ -48,30 +51,41 @@ export default function NavRight() {
     navigate("/");
   }
 
+  function toggleMenu() {
+    setMenuOpen(!menuOpen);
+  }
+
   return (
     <div style={{ display: "flex" }} className="navbar-right">
-      {isAuthenticated ? (
+      {isAuthenticated && user?.rol ? (
         <div datatype="Cambiar rol de usuario" aria-label="Función del cambio de rol">
           <button type="button" onClick={(handleChangeRole)} className="btn-tertiary">
-            <span>{user?.rol === "cliente" ? "Cambiar a proveedor" : "Cambiar a cliente"}</span>
+            <span>{user.rol === "cliente" ? "Cambiar a proveedor" : "Cambiar a cliente"}</span>
           </button>
         </div>
-      ) : (
+      ) : !isAuthenticated ? (
         <div datatype="Iniciar sesión" aria-label="Iniciar sesión">
           <button type="button" onClick={() => navigate("/login")} className="btn-tertiary">
             <span>Iniciar sesión</span>
           </button>
         </div>
-      )}
+      ) : null}
 
+      <div ref={menuWrapperRef}>
       <div className="btn-quaternary">
-        <button type="button" onClick={() => setMenuOpen((prevOpen) => !prevOpen)}>
+        <button
+          type="button"
+          onClick={toggleMenu}
+          aria-label="Abrir menú"
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+          aria-controls="user-menu">
           <span><Icon name="menu" /></span>
         </button>
       </div>
 
       {menuOpen && (
-        <ul id="user-menu" className="dropdown" role="menu" ref={menuRef}>
+        <ul id="user-menu" className="dropdown" role="menu">
           {!isAuthenticated ? (
             <div>
               <li className="dropdown__item"><button className="dropdown__button" onClick={() => setMenuOpen(false)} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>Centro de ayuda</button></li>
@@ -115,6 +129,7 @@ export default function NavRight() {
           )}
         </ul>
       )}
+      </div>
     </div>
   );
 }

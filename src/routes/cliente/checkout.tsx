@@ -13,7 +13,7 @@ import { savePaymentSession } from "../../utils/paymentStorage";
 import type { CheckoutLocationState } from "../../types/checkoutTypes";
 import Icon from "../../components/misc/icon";
 
-const stripePromise = loadStripe("pk_test_51TUub07VXPEXRAaZoDnAgkPZRulhGacTiNB3KljwY5Op0KvBrzOkCRc9XbUIHRmGnm0UtsaUHq88uBKGxscZt6iA00gusQownh");
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function CheckoutPageContent() {
     const navigate = useNavigate();

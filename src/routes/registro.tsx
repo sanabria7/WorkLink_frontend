@@ -24,8 +24,12 @@ export default function Registro() {
         setErrorResponse({});
         setLoading(true);
         try {
-            await registro({ nombre, apellido, correo, password, telefono, rol })
-            navigate("/login", { replace: true })
+            const respuesta = await registro({ nombre, apellido, correo, password, telefono, rol });
+            // Pantalla de espera: le decimos a qué correo enviamos el enlace (y si falló el envío)
+            navigate("/verifica-correo", {
+                replace: true,
+                state: { correo, correoEnviado: respuesta.correoEnviado },
+            });
         } catch (error: unknown) {
             if (isAxiosError(error)) {
                 console.log("Error recibido:", error.response?.data);

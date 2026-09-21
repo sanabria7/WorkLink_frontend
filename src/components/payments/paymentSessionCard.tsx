@@ -1,10 +1,13 @@
 import { useState } from "react";
-import type { PaymentSession } from "../../types/pagosTypes";
+import type { PagoResponse, PaymentSession } from "../../types/pagosTypes";
 import PaymentStatusBadge from "./paymentStatusBadge";
 import Icon from "../misc/icon";
 
+// El checkout entrega una PaymentSession completa; la vista "Mis pagos" solo
+// dispone del PagoResponse. La tarjeta ya lee servicio/reserva/idsSlots/createdAt
+// de forma defensiva, así que aquí esos campos son opcionales.
 interface Props {
-    session: PaymentSession;
+    session: { pago: PagoResponse } & Partial<Omit<PaymentSession, "pago">>;
 }
 
 export default function PaymentSessionCard({ session }: Props) {

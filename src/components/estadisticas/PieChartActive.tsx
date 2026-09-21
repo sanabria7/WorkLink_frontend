@@ -20,7 +20,6 @@ const renderActiveShape = ({
   endAngle,
   fill,
   payload,
-  percent,
   value,
   totalReservas
 }: ActiveShapeProps) => {
